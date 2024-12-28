@@ -1,11 +1,16 @@
 from transformers import AutoTokenizer, AutoModelForTokenClassification
 from transformers import pipeline
 
-tokenizer = AutoTokenizer.from_pretrained("dslim/bert-base-NER")
-model = AutoModelForTokenClassification.from_pretrained("dslim/bert-base-NER")
+class NER():
+    def __init__(self):
+        self.tokenizer = AutoTokenizer.from_pretrained("dslim/bert-base-NER")
+        self.model = AutoModelForTokenClassification.from_pretrained("dslim/bert-base-NER")
 
-nlp = pipeline("ner", model=model, tokenizer=tokenizer)
-example = "My name is Wolfgang and I live in Berlin"
+        self.nlp = pipeline("ner", model=self.model, tokenizer=self.tokenizer)
 
-ner_results = nlp(example)
-print(ner_results)
+if __name__ == "__main__":
+    ner = NER()
+    example = "My name is Wolfgang and I live in Berlin"
+
+    ner_results = ner.nlp(example)
+    print(ner_results)

@@ -10,14 +10,23 @@ from tqdm import tqdm
 # TODO: remove data without summary_id
 # TODO: Doku
 # TODO: remove unneccessary imports
+# TODO: read in data files for each split
 class RecapData():
-    def __init__(self):
+    def __init__(self, filename = None):
         '''
         This method initializes the class RecapData(). 
         '''
+        self.mapped_summs = defaultdict(list)
+
+        if filename:
+            self.mapped_summs["validation"] = self.read_data(filename)
+        else:
+            self.create_data()
+
+    def create_data(self):
         self.kmfoda_data = load_dataset("kmfoda/booksum")
         #print("text: ", kmfoda_data["train"][0]["summary_text"])
-        self.mapped_summs = defaultdict(list)
+        
         for split in self.kmfoda_data.keys():
             if split != "train":
                 self.mapped_summs[split] = self.map_chapters(split)
@@ -110,11 +119,19 @@ class RecapData():
                     number += char_num
         return number 
 
+    def read_data(self, filename):
+        with open(filename, "r", encoding = "utf-8") as f:
+            data = [json.loads(line) for line in f]
+            #print(Dataset.from_list(data))
+        return data
+
 
 if __name__ == "__main__":
-    recaps = RecapData()
+    #recaps = RecapData()
 
     ### train, validation, test
     ## vorletzte chapter summary -> same book id und source
     ## letzte chapter summary -> same book id und source
+    test_recaps = RecapData("./data/small_validation.jsonl")
+    print(test_recaps.mapped_summs)
     print("Done")

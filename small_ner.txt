@@ -1,0 +1,64 @@
+next words: {'B', 'ndy', 'Ada', 'ad', 'Prince', 'ar', 'Parliament', 'J', 'C', 'Wood', 'lly', 'Africa', 'Je', 'Esther', 'dy', 'RichardJr', 'leakHouse'}
+prev summ: Well, Sir Dedlock is back at Chesney Wold, but not totally recovered. Lady Dedlock has been buried in the family mausoleum. No one is told exactly how she died, and those few who do know are paid to stay quiet. George Rouncewell helps Sir Dedlock ride his horse. The stables are kept ship-shape by Phil. Mrs. Rouncewell is still the housekeeper. It's implied that when Sir Dedlock dies it'll be the end of the Dedlock family and its prominence.
+prev sent: Well, Sir Dedlock is back at Chesney Wold, but not totally recovered
+prev sent:  Lady Dedlock has been buried in the family mausoleum
+prev sent:  No one is told exactly how she died, and those few who do know are paid to stay quiet
+prev sent:  George Rouncewell helps Sir Dedlock ride his horse
+prev sent:  The stables are kept ship-shape by Phil
+prev sent:  Mrs
+prev sent:  Rouncewell is still the housekeeper
+prev sent:  It's implied that when Sir Dedlock dies it'll be the end of the Dedlock family and its prominence
+prev sent: 
+recap: 
+prev summ: The Jarndyce and Jarndyce case is finally ready to "come up," this time at Westminster Hall . On their way to Westminster, Esther and Allan meet Caddy passing by in a carriage. The Jarndyce and Jarndyce case is finally ready to "come up," this time at Westminster Hall . On their way to Westminster, Esther and Allan meet Caddy passing by in a carriage. At Westminster Hall, they learn that legal costs have exhausted the entire worth of the estate. The shock is too much for the already ill Richard: though resolved to start life afresh -- "to begin the world" -- and reconciled at last with Mr. Jarndyce, he dies the same day. Miss Flite comes weeping to Esther. The "poor, crazed" woman has set her birds free. Lady Dedlock has been buried unobtrusively in the family mausoleum at Chesney Wold. How she died is a mystery. Sir Leicester, riding on the estate with George Rouncewell, constantly honors her memory and her burial place. He and Boythorn still quarrel over the disputed thoroughfare, but in a way that gives satisfaction to both. George and Phil Squod have a permanent residence in one of the lodges of the park. Chesney Wold, now headed only by an aging widower, settles into a "dull repose." Sir Leicester himself will live only a little longer. In the evenings, Volumnia reads political treatises to him. She discovers that she will inherit the estate.
+prev sent: The Jarndyce and Jarndyce case is finally ready to "come up," this time at Westminster Hall 
+prev sent:  On their way to Westminster, Esther and Allan meet Caddy passing by in a carriage
+prev sent:  The Jarndyce and Jarndyce case is finally ready to "come up," this time at Westminster Hall 
+prev sent:  On their way to Westminster, Esther and Allan meet Caddy passing by in a carriage
+prev sent:  At Westminster Hall, they learn that legal costs have exhausted the entire worth of the estate
+prev sent:  The shock is too much for the already ill Richard: though resolved to start life afresh -- "to begin the world" -- and reconciled at last with Mr
+prev sent:  Jarndyce, he dies the same day
+prev sent:  Miss Flite comes weeping to Esther
+prev sent:  The "poor, crazed" woman has set her birds free
+prev sent:  Lady Dedlock has been buried unobtrusively in the family mausoleum at Chesney Wold
+prev sent:  How she died is a mystery
+prev sent:  Sir Leicester, riding on the estate with George Rouncewell, constantly honors her memory and her burial place
+prev sent:  He and Boythorn still quarrel over the disputed thoroughfare, but in a way that gives satisfaction to both
+prev sent:  George and Phil Squod have a permanent residence in one of the lodges of the park
+prev sent:  Chesney Wold, now headed only by an aging widower, settles into a "dull repose
+prev sent: " Sir Leicester himself will live only a little longer
+prev sent:  In the evenings, Volumnia reads political treatises to him
+prev sent:  She discovers that she will inherit the estate
+prev sent: 
+recap: The Jarndyce and Jarndyce case is finally ready to "come up," this time at Westminster Hall .  On their way to Westminster, Esther and Allan meet Caddy passing by in a carriage.  The Jarndyce and Jarndyce case is finally ready to "come up," this time at Westminster Hall .  On their way to Westminster, Esther and Allan meet Caddy passing by in a carriage.  Jarndyce, he dies the same day.  Miss Flite comes weeping to Esther. 
+prev summ: "Down in Lincolnshire" The narrator says that Chesney Wold is now very quiet. Sir Leicester is still alive, but very sick. The feud with Boythorn still continues, but Boythorn now does it as a way of cheering Sir Leicester up. Phil now lives in a lodge on the grounds, maintaining the stables. Mrs. Rouncewell and George still care for Sir Leicester. There are visitors, including Bagnet. Much of the house is closed. Volumnia is still there, but the other cousins come only rarely. The house is so quiet and dismal that people are afraid to walk in it alone
+prev sent: "Down in Lincolnshire" The narrator says that Chesney Wold is now very quiet
+prev sent:  Sir Leicester is still alive, but very sick
+prev sent:  The feud with Boythorn still continues, but Boythorn now does it as a way of cheering Sir Leicester up
+prev sent:  Phil now lives in a lodge on the grounds, maintaining the stables
+prev sent:  Mrs
+prev sent:  Rouncewell and George still care for Sir Leicester
+prev sent:  There are visitors, including Bagnet
+prev sent:  Much of the house is closed
+prev sent:  Volumnia is still there, but the other cousins come only rarely
+prev sent:  The house is so quiet and dismal that people are afraid to walk in it alone
+recap: The Jarndyce and Jarndyce case is finally ready to "come up," this time at Westminster Hall .  On their way to Westminster, Esther and Allan meet Caddy passing by in a carriage.  The Jarndyce and Jarndyce case is finally ready to "come up," this time at Westminster Hall .  On their way to Westminster, Esther and Allan meet Caddy passing by in a carriage.  Jarndyce, he dies the same day.  Miss Flite comes weeping to Esther. 
+next words: {'IndianTerritory', 'AuntPolly', 'Tom', 'AuntSally', 'Hu', 'Pa', 'Phelps', 'Jim', 'ck'}
+prev summ: Tom does not return, and Silas's efforts to find him end in vain. In the meantime, a letter arrives from Aunt Polly, Sally's sister. Sally casts the letter aside when she sees Tom, who she thinks is Sid. The boy is brought in semi-conscious on a mattress, accompanied by a crowd including Jim, in chains, and the doctor. Some of the local men would like to hang Jim but are unwilling to risk having to compensate Jim's master. They treat Jim roughly and chain him hand and foot inside the shed. The doctor intervenes, telling the crowd how Jim has sacrificed his freedom to help nurse Tom. Sally, meanwhile, stays at Tom's bedside, glad that his condition has improved. Tom wakes and gleefully details how they set Jim free. Horrified to learn that Jim is now in chains, Tom explains that Miss Watson died two months ago and that her will stipulated that Jim should be set free. The old woman regretted ever having considered selling Jim down the river. Just then, Aunt Polly walks into the room. She has come to Arkansas from St. Petersburg after receiving a letter from Sally mentioning that Sid Sawyer--Tom's alias--had arrived with "Tom"--who was actually Huck. Tom has been intercepting communications between the sisters, and Polly has been forced to appear in person to sort out the confusion. After a tearful reunion with Sally, she identifies Tom and Huck and yells at both boys for their misadventures
+prev sent: Tom does not return, and Silas's efforts to find him end in vain
+prev sent:  In the meantime, a letter arrives from Aunt Polly, Sally's sister
+prev sent:  Sally casts the letter aside when she sees Tom, who she thinks is Sid
+prev sent:  The boy is brought in semi-conscious on a mattress, accompanied by a crowd including Jim, in chains, and the doctor
+prev sent:  Some of the local men would like to hang Jim but are unwilling to risk having to compensate Jim's master
+prev sent:  They treat Jim roughly and chain him hand and foot inside the shed
+prev sent:  The doctor intervenes, telling the crowd how Jim has sacrificed his freedom to help nurse Tom
+prev sent:  Sally, meanwhile, stays at Tom's bedside, glad that his condition has improved
+prev sent:  Tom wakes and gleefully details how they set Jim free
+prev sent:  Horrified to learn that Jim is now in chains, Tom explains that Miss Watson died two months ago and that her will stipulated that Jim should be set free
+prev sent:  The old woman regretted ever having considered selling Jim down the river
+prev sent:  Just then, Aunt Polly walks into the room
+prev sent:  She has come to Arkansas from St
+prev sent:  Petersburg after receiving a letter from Sally mentioning that Sid Sawyer--Tom's alias--had arrived with "Tom"--who was actually Huck
+prev sent:  Tom has been intercepting communications between the sisters, and Polly has been forced to appear in person to sort out the confusion
+prev sent:  After a tearful reunion with Sally, she identifies Tom and Huck and yells at both boys for their misadventures
+recap: Tom does not return, and Silas's efforts to find him end in vain.  Sally casts the letter aside when she sees Tom, who she thinks is Sid.  The boy is brought in semi-conscious on a mattress, accompanied by a crowd including Jim, in chains, and the doctor.  Some of the local men would like to hang Jim but are unwilling to risk having to compensate Jim's master.  They treat Jim roughly and chain him hand and foot inside the shed.  The doctor intervenes, telling the crowd how Jim has sacrificed his freedom to help nurse Tom.  Sally, meanwhile, stays at Tom's bedside, glad that his condition has improved.  Tom wakes and gleefully details how they set Jim free.  Horrified to learn that Jim is now in chains, Tom explains that Miss Watson died two months ago and that her will stipulated that Jim should be set free.  The old woman regretted ever having considered selling Jim down the river.  Just then, Aunt Polly walks into the room.  Petersburg after receiving a letter from Sally mentioning that Sid Sawyer--Tom's alias--had arrived with "Tom"--who was actually Huck.  Tom has been intercepting communications between the sisters, and Polly has been forced to appear in person to sort out the confusion.  After a tearful reunion with Sally, she identifies Tom and Huck and yells at both boys for their misadventures. 

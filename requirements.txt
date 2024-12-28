@@ -1,0 +1,5 @@
+datasets==3.0.1
+torch==2.0.1
+torchtext==0.15.2
+transformers==4.24.0
+py7zr
