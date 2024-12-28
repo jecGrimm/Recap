@@ -4,6 +4,7 @@
 - data
 - baseline
 - sentence similarity
+    - treshold entwickeln
 - analysis or summary better?
 - visualizations
 - new dataset
@@ -21,3 +22,7 @@ environment:
 -> is a string with various format (e.g. "act 3, scene 4" vs. "chapter 1-2")
 -> summarization of multiple chapters at once ("chapter 1-2")
 - The models do not produce the same results -> each created dataset might be different
+- summaries are quite long -> similarities get very small
+- Extractive approach
+-> not very good readable (Sprünge, fehlende Zusammenhänge)
+-> only the information is kept (keine schönen Bindeglieder und Einordnungen)

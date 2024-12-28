@@ -18,33 +18,40 @@ class SentenceSimilarity():
         return torch.sum(token_embeddings * input_mask_expanded, 1) / torch.clamp(input_mask_expanded.sum(1), min=1e-9)
 
 
-    def create_embeddings(self, sentences, tokenizer, model):
+    def create_embeddings(self, sentences):
         # Tokenize sentences
-        encoded_input = tokenizer(sentences, padding=True, truncation=True, return_tensors='pt')
+        encoded_input = self.tokenizer(sentences, padding=True, truncation=True, return_tensors='pt')
 
         # Compute token embeddings
         with torch.no_grad():
-            model_output = model(**encoded_input)
+            model_output = self.model(**encoded_input)
 
         # Perform pooling. In this case, max pooling.
         sentence_embeddings = self.mean_pooling(model_output, encoded_input['attention_mask'])
         return sentence_embeddings
     
-    def compute_similarity(self):
-        return F.cosine_similarity(sentence_embeddings[0], sentence_embeddings[1], dim =-1)
+    def compute_similarity(self, first_embed, second_embed):
+        return F.cosine_similarity(first_embed, second_embed, dim =-1)
 
 if __name__ == "__main__":
 
     # Sentences we want sentence embeddings for
     sentences = ['This is an example sentence', 'Each sentence is converted. Das ist ein Paragraph, der aus mehreren Texten besteht']
 
+    similarity = SentenceSimilarity()
     # Load model from HuggingFace Hub
-    tokenizer = AutoTokenizer.from_pretrained('sentence-transformers/paraphrase-distilroberta-base-v1')
-    model = AutoModel.from_pretrained('sentence-transformers/paraphrase-distilroberta-base-v1')
+    #tokenizer = AutoTokenizer.from_pretrained('sentence-transformers/paraphrase-distilroberta-base-v1')
+    #model = AutoModel.from_pretrained('sentence-transformers/paraphrase-distilroberta-base-v1')
 
-    sentence_embeddings = model.create_embeddings(sentences, tokenizer, model)
+    one_sentence = "This is a test"
+    two_sentence = "This is a second test"
+    one = similarity.create_embeddings(one_sentence)
+    two = similarity.create_embeddings(two_sentence)
+    print(similarity.compute_similarity(one, two))
 
-    print("Sentence embeddings:")
-    print(sentence_embeddings)
-    print("Size:", sentence_embeddings.size())
-    print(F.cosine_similarity(sentence_embeddings[0], sentence_embeddings[1], dim =-1))
+    # sentence_embeddings = similarity.create_embeddings(sentences)
+
+    # print("Sentence embeddings:")
+    # print(sentence_embeddings)
+    # print("Size:", sentence_embeddings.size())
+    # print(similarity.compute_similarity(sentence_embeddings))
