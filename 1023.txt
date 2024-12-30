@@ -1,0 +1,73 @@
+{"bid":1023,
+"previous summary id":["chapter 66","chapters 65-66","chapter 66","chapter 66"],
+"previous summary":[
+    "Well, Sir Dedlock is back at Chesney Wold, but not totally recovered. 
+    Lady Dedlock has been buried in the family mausoleum. 
+    No one is told exactly how she died, and those few who do know are paid to stay quiet. 
+    George Rouncewell helps Sir Dedlock ride his horse. 
+    The stables are kept ship-shape by Phil. 
+    Mrs. Rouncewell is still the housekeeper. 
+    It's implied that when Sir Dedlock dies it'll be the end of the Dedlock family and
+    its prominence.",
+
+     
+    "The Jarndyce and Jarndyce case is finally ready to \"come up,\" 
+    this time at Westminster Hall . 
+    On their way to Westminster, Esther and Allan meet Caddy passing by in a carriage. 
+    The Jarndyce and Jarndyce case is finally ready to \"come up,\" 
+    this time at Westminster Hall . 
+    On their way to Westminster, Esther and Allan meet Caddy passing by in a carriage. 
+    
+    At Westminster Hall, they learn that legal costs have exhausted the entire worth 
+    of the estate. The shock is too much for the already ill Richard: 
+    though resolved to start life afresh -- \"to begin the world\" -- 
+    and reconciled at last with Mr. Jarndyce, he dies the same day. 
+    Miss Flite comes weeping to Esther. The \"poor, crazed\" woman has set her birds free.
+    Lady Dedlock has been buried unobtrusively in the family mausoleum at Chesney Wold. 
+    How she died is a mystery. Sir Leicester, riding on the estate with George Rouncewell,
+    constantly honors her memory and her burial place. 
+    He and Boythorn still quarrel over the disputed thoroughfare, 
+    but in a way that gives satisfaction to both. 
+    George and Phil Squod have a permanent residence in one of the lodges of the park. 
+    Chesney Wold, now headed only by an aging widower, settles into a \"dull repose.\" 
+    Sir Leicester himself will live only a little longer. 
+    In the evenings, Volumnia reads political treatises to him. 
+    She discovers that she will inherit the estate.",
+    
+    
+    "\"Down in Lincolnshire\" The narrator says that Chesney Wold is now very quiet. 
+    Sir Leicester is still alive, but very sick. 
+    The feud with Boythorn still continues, 
+    but Boythorn now does it as a way of cheering Sir Leicester up. 
+    Phil now lives in a lodge on the grounds, maintaining the stables. 
+    Mrs. Rouncewell and George still care for Sir Leicester. 
+    There are visitors, including Bagnet. Much of the house is closed. 
+    Volumnia is still there, but the other cousins come only rarely. 
+    The house is so quiet and dismal that people are afraid to walk in it alone",
+    
+    "Down in Lincolnshire Sir Leicester has buried Lady Dedlock in the family vault 
+    with all honors. 
+    Boythorn, out of respect, tries to call off their feud about the right of way, 
+    but Sir Leicester needs something to keep him going, so they start it up again. 
+    George and Phil Squod are also retired in the country, k
+    eeping the lodge at Chesney Wold and waiting on Sir Leicester. 
+    Mrs. Rouncewell goes to church on the arm of her son. 
+    Volumnia amuses Sir Leicester and finds she will be his heir."],
+    
+"previous source":["shmoop","cliffnotes","sparknotes","novelguide"],
+    
+"next summary id":"chapter 67",
+"next summary":"
+    This chapter is like the part at the end of a movie where they freeze-frame 
+    each character and tell you what happens to them after the movie ends. 
+    So: Esther and Woodcourt live happily ever after . 
+    They have two daughters and she enjoys being the doctor's wife . 
+    They've built an addition to their house for Jarndyce to come and stay anytime. 
+    Caddy and Prince are happily married and run a big dancing school. 
+    They have a deaf daughter . Prince is now lame, so Caddy does all the teaching. 
+    Mr. Jellyby still comes by every evening. 
+    Mrs. Jellyby has abandoned Africa and is now working on getting women into Parliament.
+    Ada has a son named Richard Jr. 
+    They live in the original Bleak House with Jarndyce as a father to her 
+    and grandfather to him.",
+"next source":"shmoop"}

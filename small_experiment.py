@@ -1,6 +1,15 @@
 from data import RecapData
 from ner import NER
 from similarity import SentenceSimilarity
+from CaptionMetrics.pycocoevalcap.bleu.bleu import Bleu
+from CaptionMetrics.pycocoevalcap.cider.cider import Cider
+from CaptionMetrics.pycocoevalcap.meteor.meteor import Meteor
+from CaptionMetrics.pycocoevalcap.rouge.rouge import Rouge
+from CaptionMetrics.pycocoevalcap.spice.spice import Spice
+import json
+import matplotlib.pyplot as plt
+import numpy as np
+from collections import defaultdict
 
 # TODO: store sentence similarity in a file
 # TODO: Daten speichern
@@ -86,9 +95,165 @@ def create_sentence_recap(dataset, sim, treshold):
         #instance["similarity recap"] = sim_recaps
     #print("recap dataset:", recaps)
 
+def evaluate(gold_file, result_file):
+
+    with open(gold_file, 'r') as file:
+        gts = json.load(file)
+
+    with open(result_file, 'r') as file:
+        res = json.load(file)
+
+    bleu_scorer = Bleu(n=4)
+    # # scorer += (hypo[0], ref1)   # hypo[0] = 'word1 word2 word3 ...'
+    # #                                 # ref = ['word1 word2 word3 ...', 'word1 word2 word3 ...']
+    bleu_score, bleu_scores = bleu_scorer.compute_score(gts, res)
+
+    print('bleu = %s' % bleu_score)
+
+    cider_scorer = Cider()
+    # scorer += (hypo[0], ref1)
+    (cider_score, cider_scores) = cider_scorer.compute_score(gts, res)
+    print('cider = %s' % cider_score)
+
+    # meteor_scorer = Meteor()
+    # meteor_score, meteor_scores = meteor_scorer.compute_score(gts, res)
+    # print('meteor = %s' % meteor_score)
+
+    rouge_scorer = Rouge()
+    rouge_score, rouge_scores = rouge_scorer.compute_score(gts, res)
+    print('rouge = %s' % rouge_score)
+
+    # spice_scorer = Spice()
+    #spice_score, spice_scores = spice_scorer.compute_score(gts, res)
+    #print('spice = %s' % spice_score)
+
+def kept_positions(summs, recaps):
+    values = [0, 0, 0]
+    for summ_pos, summ in enumerate(summs):
+        sentences = summ.split(".")
+        #print("summ:", summ)
+        #print("len summ:", len(sentences))
+        part = int(len(sentences)/3)
+        #print("part:", part)
+
+        #print("pos:", summ_pos)
+
+        #print("recap:", recaps[summ_pos])
+
+        if recaps[summ_pos] != "":
+            for sent_pos, sent in enumerate(sentences, start=1):
+                #print("sent:", sent)
+                if sent in recaps[summ_pos]:
+                    #print("sentence is in recap")
+                    if sent_pos <= part:
+                        values[0] += 1
+                    elif sent_pos > part and sent_pos <= part*2:
+                        values[1] += 1
+                    else:
+                        values[2] += 1
+    return values
+
+def num_kept_sents(dataset, recaps, src_names):
+    counter = 0
+    num_kept = defaultdict(int)
+    num_orig = defaultdict(int)
+    for inst in dataset:
+        for pos, summ in enumerate(inst["previous summary"][:3]):
+            source = inst["previous source"][pos]
+
+            num_kept[source] += len(recaps[counter].split("."))
+            num_orig[source] += len(summ.split("."))
+
+            counter += 1
+
+    kept_norm = []
+    for src in src_names:
+        if num_orig[src] != 0:
+            kept_norm.append(num_kept[src]/num_orig[src])
+        else:
+            kept_norm.append(0)
+
+    return kept_norm
+
+
+def vis_pos(positions):
+    names = ['begin', 'middle', 'end']
+    
+    x = np.arange(len(names))  # the label locations
+    width = 0.25  # the width of the bars
+    multiplier = 0
+
+    fig, ax = plt.subplots(layout='constrained')
+
+    for approach, num_pos in positions.items():
+        offset = width * multiplier
+        rects = ax.bar(x + offset, num_pos, width, label=approach)
+        ax.bar_label(rects, padding=3)
+        multiplier += 1
+            
+    ax.set_ylabel('Number of sentences')
+    ax.set_title('Position of the recap sentences in the original summary')
+    ax.set_xticks(x + width/2, names)
+    ax.legend(loc='upper left', ncols=2)
+    ax.set_ylim(0, 12)
+
+    plt.show()
+
+def vis_num_kept(kept_sources, names):    
+    x = np.arange(len(names))  # the label locations
+    width = 0.25  # the width of the bars
+    multiplier = 0
+
+    fig, ax = plt.subplots(layout='constrained')
+
+    for approach, prop_kept in kept_sources.items():
+        offset = width * multiplier
+        rects = ax.bar(x + offset, prop_kept, width, label=approach)
+        #ax.bar_label(rects, padding=3)
+        multiplier += 1
+            
+    ax.set_ylabel('Proportion of the extracted sentences')
+    ax.set_title('Extracted sentences per source')
+    ax.set_xticks(x + width/2, names)
+    ax.legend(loc='upper left', ncols=2)
+    y_value=['{:.0%}'.format(x) for x in ax.get_yticks()]
+    ax.set_yticklabels(y_value)
+    #ax.set_ylim(0, 1)
+
+    plt.show()
+
+
 
 test_recaps = RecapData("./data/small_validation.jsonl")
-#dataset = test_recaps.mapped_summs["validation"]
+dataset = test_recaps.mapped_summs["validation"]
 
-sim = SentenceSimilarity()
-create_sentence_recap(test_recaps, sim, 0.2)
+#sim = SentenceSimilarity()
+#create_sentence_recap(test_recaps, sim, 0.2)
+
+# print("\nNER:\n")
+# evaluate('./small_gld.json', './small_ner.json')
+
+# print("\nSentence Similarity:\n")
+# evaluate('./small_gld.json', './small_sim.json')
+
+with open('./small_ner.json', 'r') as file:
+        ner_res = json.load(file)
+with open('./small_sim.json', 'r') as file:
+        sim_res = json.load(file)
+
+ner_recaps = [recap[0] for recap in ner_res.values()]
+sim_recaps = [recap[0] for recap in sim_res.values()]
+#print("ner values: ", [recap[0] for recap in ner_res.values()])
+summs = [summ for inst in dataset for summ in inst["previous summary"][:3]]
+#print("summs:", summs)
+#print("recaps:", recaps)
+#print("dataset:", dataset)
+#print("dataset prev", dataset["previous summary"])
+#positions = {"NER": kept_positions(summs, ner_recaps), "Similarity": kept_positions(summs, sim_recaps)} 
+#vis_pos(positions)
+src_names = ["shmoop","cliffnotes","sparknotes"]
+
+kept_sources = {"NER": num_kept_sents(dataset, ner_recaps, src_names), "Similarity": num_kept_sents(dataset, sim_recaps, src_names)}
+#print("kept_sources", kept_sources)
+
+vis_num_kept(kept_sources, src_names)
