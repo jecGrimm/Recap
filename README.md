@@ -13,13 +13,16 @@
 - evaluation
     - semantic based metric (spice zum laufen kriegen)
     - statistische Signifikanz
+- compare with existing LLM
 
 ## Referat
-- Grafiken
-    - Wieviele Sätze werden behalten?
-    - Evaluation
+- Gemma 2 paper lesen (no instruction: https://huggingface.co/google/gemma-2-2b, instruction: https://huggingface.co/google/gemma-2-2b-it)
+- NER paper lesen
+- Sentence Modell paper lesen
+- herausfinden, ob Gemma Projekt Gutenberg kennt
 - Folien
-- Paper zu Intention lesen
+- semantic based metric (spice zum laufen kriegen)
+- statistische Signifikanz
 
 # Notes
 ## Usage:
@@ -46,3 +49,16 @@ environment:
 - only whole sentences are extracted, but only one part of them might be interesting
 - treating the next chapter summary as input is not really correct, we should take the whole chapter, but the input is too small -> split approach?
 - using the next chapter summary as gold reference is not correct because it is no recap
+- LLM für Zusammenfassung:
+-> Ist die Information korrekt?
+
+## Experiment Setup
+### Models
+- Extractive
+-> NER
+-> DistilBERT
+- Abstractive
+-> Gemma-2-it
+
+### Evaluation
+- No Bertscore because it depends on BERT embeddings and measures the similarity -> Not feasible to compare with the sentence similarity DistilBERT model 

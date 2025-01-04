@@ -230,30 +230,37 @@ dataset = test_recaps.mapped_summs["validation"]
 #sim = SentenceSimilarity()
 #create_sentence_recap(test_recaps, sim, 0.2)
 
+# Evaluation 
+
 # print("\nNER:\n")
 # evaluate('./small_gld.json', './small_ner.json')
 
 # print("\nSentence Similarity:\n")
 # evaluate('./small_gld.json', './small_sim.json')
 
-with open('./small_ner.json', 'r') as file:
-        ner_res = json.load(file)
-with open('./small_sim.json', 'r') as file:
-        sim_res = json.load(file)
+print("\nLLM:\n")
+evaluate('./small_gld.json', './small_llm.json')
 
-ner_recaps = [recap[0] for recap in ner_res.values()]
-sim_recaps = [recap[0] for recap in sim_res.values()]
-#print("ner values: ", [recap[0] for recap in ner_res.values()])
-summs = [summ for inst in dataset for summ in inst["previous summary"][:3]]
-#print("summs:", summs)
-#print("recaps:", recaps)
-#print("dataset:", dataset)
-#print("dataset prev", dataset["previous summary"])
-#positions = {"NER": kept_positions(summs, ner_recaps), "Similarity": kept_positions(summs, sim_recaps)} 
-#vis_pos(positions)
-src_names = ["shmoop","cliffnotes","sparknotes"]
+# Visualizations
 
-kept_sources = {"NER": num_kept_sents(dataset, ner_recaps, src_names), "Similarity": num_kept_sents(dataset, sim_recaps, src_names)}
-#print("kept_sources", kept_sources)
+# with open('./small_ner.json', 'r') as file:
+#         ner_res = json.load(file)
+# with open('./small_sim.json', 'r') as file:
+#         sim_res = json.load(file)
 
-vis_num_kept(kept_sources, src_names)
+# ner_recaps = [recap[0] for recap in ner_res.values()]
+# sim_recaps = [recap[0] for recap in sim_res.values()]
+# #print("ner values: ", [recap[0] for recap in ner_res.values()])
+# summs = [summ for inst in dataset for summ in inst["previous summary"][:3]]
+# #print("summs:", summs)
+# #print("recaps:", recaps)
+# #print("dataset:", dataset)
+# #print("dataset prev", dataset["previous summary"])
+# #positions = {"NER": kept_positions(summs, ner_recaps), "Similarity": kept_positions(summs, sim_recaps)} 
+# #vis_pos(positions)
+# src_names = ["shmoop","cliffnotes","sparknotes"]
+
+# kept_sources = {"NER": num_kept_sents(dataset, ner_recaps, src_names), "Similarity": num_kept_sents(dataset, sim_recaps, src_names)}
+# #print("kept_sources", kept_sources)
+
+# vis_num_kept(kept_sources, src_names)
