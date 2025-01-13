@@ -11,17 +11,20 @@
 - new dataset
 - model
 - evaluation
-    - semantic based metric (spice zum laufen kriegen)
+    - semantic based metric (SummaC zum laufen kriegen) -> summac für Gemma auch für das previous chapter anwenden?  
+    - meteor zum laufen kriegen
     - statistische Signifikanz
-- compare with existing LLM
+    - SummaC to check for Gemma spoilers
+- good sentence splitting
+- develop hyperparameters: similarity treshold, #NERs
+- experiment on test dataset
 
 ## Referat
-- Gemma 2 paper lesen (no instruction: https://huggingface.co/google/gemma-2-2b, instruction: https://huggingface.co/google/gemma-2-2b-it)
+- spice zum laufen kriegen
+- SummaC paper lesen
 - NER paper lesen
 - Sentence Modell paper lesen
-- herausfinden, ob Gemma Projekt Gutenberg kennt
-- Folien
-- semantic based metric (spice zum laufen kriegen)
+- semantic based metric (spice/summaqa zum laufen kriegen)
 - statistische Signifikanz
 
 # Notes
@@ -51,6 +54,12 @@ environment:
 - using the next chapter summary as gold reference is not correct because it is no recap
 - LLM für Zusammenfassung:
 -> Ist die Information korrekt?
+- Similarity model: maximum input length of 128
+- BookSum problems: 
+-> data contamenation (but Gemma is filtered for evaluation datasets)
+-> monolingual: English (Gemma also is mostly trained on english data)
+-> quality of the summaries
+-> harmful content in old books
 
 ## Experiment Setup
 ### Models
@@ -58,7 +67,7 @@ environment:
 -> NER
 -> DistilBERT
 - Abstractive
--> Gemma-2-it
+-> Gemma-2-2b-it
 
 ### Evaluation
 - No Bertscore because it depends on BERT embeddings and measures the similarity -> Not feasible to compare with the sentence similarity DistilBERT model 

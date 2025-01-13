@@ -10,12 +10,14 @@ import json
 import matplotlib.pyplot as plt
 import numpy as np
 from collections import defaultdict
+from transformers import AutoModelForSeq2SeqLM, AutoTokenizer, pipeline
+from summac.model_summac import  SummaCConv
 
-# TODO: store sentence similarity in a file
 # TODO: Daten speichern
 # TODO: in Funktionen auslagern
 # TODO: in den Klassen unterbringen
 # TODO: create_ner_recaps über mapping ausführen
+# TODO: get_words deletes spaces
 def get_words(ners):
     words = set()
 
@@ -103,29 +105,65 @@ def evaluate(gold_file, result_file):
     with open(result_file, 'r') as file:
         res = json.load(file)
 
-    bleu_scorer = Bleu(n=4)
-    # # scorer += (hypo[0], ref1)   # hypo[0] = 'word1 word2 word3 ...'
-    # #                                 # ref = ['word1 word2 word3 ...', 'word1 word2 word3 ...']
-    bleu_score, bleu_scores = bleu_scorer.compute_score(gts, res)
+    # bleu_scorer = Bleu(n=4)
+    # # # scorer += (hypo[0], ref1)   # hypo[0] = 'word1 word2 word3 ...'
+    # # #                                 # ref = ['word1 word2 word3 ...', 'word1 word2 word3 ...']
+    # bleu_score, bleu_scores = bleu_scorer.compute_score(gts, res)
 
-    print('bleu = %s' % bleu_score)
+    #print('bleu = %s' % bleu_score)
 
-    cider_scorer = Cider()
-    # scorer += (hypo[0], ref1)
-    (cider_score, cider_scores) = cider_scorer.compute_score(gts, res)
-    print('cider = %s' % cider_score)
+    # cider_scorer = Cider()
+    # # scorer += (hypo[0], ref1)
+    # (cider_score, cider_scores) = cider_scorer.compute_score(gts, res)
+    # print('cider = %s' % cider_score)
 
     # meteor_scorer = Meteor()
     # meteor_score, meteor_scores = meteor_scorer.compute_score(gts, res)
     # print('meteor = %s' % meteor_score)
 
-    rouge_scorer = Rouge()
-    rouge_score, rouge_scores = rouge_scorer.compute_score(gts, res)
-    print('rouge = %s' % rouge_score)
+    # rouge_scorer = Rouge()
+    # rouge_score, rouge_scores = rouge_scorer.compute_score(gts, res)
+    # print('rouge = %s' % rouge_score)
 
-    # spice_scorer = Spice()
-    #spice_score, spice_scores = spice_scorer.compute_score(gts, res)
-    #print('spice = %s' % spice_score)
+    spice_scorer = Spice()
+    spice_score, spice_scores = spice_scorer.compute_score(gts, res)
+    print('spice = %s' % spice_score)
+
+def summacoz(tokenizer, model):
+    pipe = pipeline("text2text-generation", 
+                    model=model, 
+                    tokenizer=tokenizer)
+
+    PROMPT = """Is the hypothesis true based on the premise? Give your explanation afterwards.
+
+    Premise: 
+    {article}
+
+    Hypothesis:
+    {summary}
+    """
+
+    article = "Goldfish are being caught weighing up to 2kg and koi carp up to 8kg and one metre in length."
+    summary = "Goldfish are being caught weighing up to 8kg and one metre in length."
+
+    print(pipe(PROMPT.format(article=article, summary=summary), 
+            do_sample=False, 
+            max_new_tokens=512))
+    """[{'generated_text': '\
+    No, the hypothesis is not true. \
+    - The hypothesis states that goldfish are being caught weighing up to 8kg and one metre in length. \
+    - However, the premise states that goldfish are being caught weighing up to 2kg and koi carp up to 8kg and one metre in length. \
+    - The difference between the two is that the koi carp is weighing 8kg and the goldfish is weighing 2kg.'}]"""
+
+def summacconf(model):
+    document = """Scientists are studying Mars to learn about the Red Planet and find landing sites for future missions.
+    One possible site, known as Arcadia Planitia, is covered instrange sinuous features.
+    The shapes could be signs that the area is actually made of glaciers, which are large masses of slow-moving ice.
+    Arcadia Planitia is in Mars' northern lowlands."""
+
+    summary1 = "There are strange shape patterns on Arcadia Planitia. The shapes could indicate the area might be made of glaciers. This makes Arcadia Planitia ideal for future missions."
+    score_conv1 = model.score([document], [summary1])
+    print("[Summary 1] SummacConv score: %.3f" % (score_conv1["scores"][0])) # [Summary 1] SummaCZS Score: 0.582; SummacConv score: 0.536
 
 def kept_positions(summs, recaps):
     values = [0, 0, 0]
@@ -216,21 +254,24 @@ def vis_num_kept(kept_sources, names):
     ax.set_title('Extracted sentences per source')
     ax.set_xticks(x + width/2, names)
     ax.legend(loc='upper left', ncols=2)
+    ax.set_ylim(0, top= 1)
     y_value=['{:.0%}'.format(x) for x in ax.get_yticks()]
     ax.set_yticklabels(y_value)
-    #ax.set_ylim(0, 1)
 
     plt.show()
 
 
 
-test_recaps = RecapData("./data/small_validation.jsonl")
-dataset = test_recaps.mapped_summs["validation"]
+#test_recaps = RecapData("./data/small_validation.jsonl")
+#dataset = test_recaps.mapped_summs["validation"]
 
 #sim = SentenceSimilarity()
 #create_sentence_recap(test_recaps, sim, 0.2)
 
 # Evaluation 
+
+print("\nOriginal summary:\n")
+evaluate('./small_gld_one.json', './small_prev.json')
 
 # print("\nNER:\n")
 # evaluate('./small_gld.json', './small_ner.json')
@@ -238,8 +279,20 @@ dataset = test_recaps.mapped_summs["validation"]
 # print("\nSentence Similarity:\n")
 # evaluate('./small_gld.json', './small_sim.json')
 
-print("\nLLM:\n")
-evaluate('./small_gld.json', './small_llm.json')
+#print("\nLLM:\n")
+#evaluate('./small_gld.json', './small_llm.json')
+
+# SummaCoz
+# tokenizer = AutoTokenizer.from_pretrained("google/flan-t5-xxl")
+# model = AutoModelForSeq2SeqLM.from_pretrained("nkwbtb/flan-t5-11b-SummaCoz",
+#                                             torch_dtype="auto",
+#                                             device_map="auto")
+# summacoz(tokenizer, model)
+
+# SummaCConv
+# model_conv = SummaCConv(models=["vitc"], bins='percentile', granularity="sentence", nli_labels="e", device="cpu", start_file="default", agg="mean")
+
+# summacconf(model_conv)
 
 # Visualizations
 
@@ -251,6 +304,8 @@ evaluate('./small_gld.json', './small_llm.json')
 # ner_recaps = [recap[0] for recap in ner_res.values()]
 # sim_recaps = [recap[0] for recap in sim_res.values()]
 # #print("ner values: ", [recap[0] for recap in ner_res.values()])
+
+# Positions of kept sentences
 # summs = [summ for inst in dataset for summ in inst["previous summary"][:3]]
 # #print("summs:", summs)
 # #print("recaps:", recaps)
@@ -258,9 +313,11 @@ evaluate('./small_gld.json', './small_llm.json')
 # #print("dataset prev", dataset["previous summary"])
 # #positions = {"NER": kept_positions(summs, ner_recaps), "Similarity": kept_positions(summs, sim_recaps)} 
 # #vis_pos(positions)
-# src_names = ["shmoop","cliffnotes","sparknotes"]
 
-# kept_sources = {"NER": num_kept_sents(dataset, ner_recaps, src_names), "Similarity": num_kept_sents(dataset, sim_recaps, src_names)}
+# Proportion of kept sentences
+#src_names = ["shmoop","cliffnotes","sparknotes"]
+
+#kept_sources = {"NER": num_kept_sents(dataset, ner_recaps, src_names), "Similarity": num_kept_sents(dataset, sim_recaps, src_names)}
 # #print("kept_sources", kept_sources)
 
-# vis_num_kept(kept_sources, src_names)
+#vis_num_kept(kept_sources, src_names)
