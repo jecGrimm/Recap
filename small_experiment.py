@@ -12,6 +12,7 @@ import numpy as np
 from collections import defaultdict
 from transformers import AutoModelForSeq2SeqLM, AutoTokenizer, pipeline
 from summac.model_summac import  SummaCConv
+from nltk.tokenize import word_tokenize
 
 # TODO: Daten speichern
 # TODO: in Funktionen auslagern
@@ -125,8 +126,11 @@ def evaluate(gold_file, result_file):
     # rouge_score, rouge_scores = rouge_scorer.compute_score(gts, res)
     # print('rouge = %s' % rouge_score)
 
+    #TODO: test if this works now, otherwise use python 3.5
     spice_scorer = Spice()
+    # spice_score is the average spice score (mean of all scores)
     spice_score, spice_scores = spice_scorer.compute_score(gts, res)
+    #print("Länge Recap:", len(word_tokenize(gts["1"][0])))
     print('spice = %s' % spice_score)
 
 def summacoz(tokenizer, model):
@@ -270,17 +274,17 @@ def vis_num_kept(kept_sources, names):
 
 # Evaluation 
 
-print("\nOriginal summary:\n")
-evaluate('./small_gld_one.json', './small_prev.json')
+#print("\nOriginal summary:\n")
+#evaluate('./small_gld_one.json', './small_prev.json')
 
 # print("\nNER:\n")
-# evaluate('./small_gld.json', './small_ner.json')
+# evaluate('./small_gld_one.json', './small_ner.json')
 
 # print("\nSentence Similarity:\n")
-# evaluate('./small_gld.json', './small_sim.json')
+# evaluate('./small_gld_one.json', './small_sim.json')
 
-#print("\nLLM:\n")
-#evaluate('./small_gld.json', './small_llm.json')
+# print("\nLLM:\n")
+# evaluate('./small_gld_three.json', './small_llm.json')
 
 # SummaCoz
 # tokenizer = AutoTokenizer.from_pretrained("google/flan-t5-xxl")
@@ -290,9 +294,9 @@ evaluate('./small_gld_one.json', './small_prev.json')
 # summacoz(tokenizer, model)
 
 # SummaCConv
-# model_conv = SummaCConv(models=["vitc"], bins='percentile', granularity="sentence", nli_labels="e", device="cpu", start_file="default", agg="mean")
+model_conv = SummaCConv(models=["vitc"], bins='percentile', granularity="sentence", nli_labels="e", device="cpu", start_file="default", agg="mean")
 
-# summacconf(model_conv)
+summacconf(model_conv)
 
 # Visualizations
 

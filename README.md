@@ -1,6 +1,9 @@
 # TODOS
 ## Allgemein
+small experiment -> data processing -> development of hypers -> test -> visualizations -> writing
+
 - small experiment
+- test if I can put multiple refs in the list for evaluation
 - environment file
 - data
 - baseline
@@ -15,17 +18,16 @@
     - meteor zum laufen kriegen
     - statistische Signifikanz
     - SummaC to check for Gemma spoilers
-- good sentence splitting
+- good sentence splitting (nltk.tokenize)
 - develop hyperparameters: similarity treshold, #NERs
 - experiment on test dataset
 
 ## Referat
-- spice zum laufen kriegen
-- SummaC paper lesen
+- factuality metric (summac zum laufen kriegen & huggingface issue klären)
 - NER paper lesen
 - Sentence Modell paper lesen
-- semantic based metric (spice/summaqa zum laufen kriegen)
 - statistische Signifikanz
+- BLEU zwischen 0 und 1?
 
 # Notes
 ## Usage:
@@ -60,6 +62,7 @@ environment:
 -> monolingual: English (Gemma also is mostly trained on english data)
 -> quality of the summaries
 -> harmful content in old books
+- NER: Model is trained on news domain (CoNLL-2003)
 
 ## Experiment Setup
 ### Models
