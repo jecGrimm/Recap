@@ -3,6 +3,7 @@
 from transformers import AutoTokenizer, AutoModel
 import torch
 import torch.nn.functional as F
+from nltk.tokenize import sent_tokenize
 
 class SentenceSimilarity():
     def __init__(self):
@@ -17,7 +18,7 @@ class SentenceSimilarity():
         input_mask_expanded = attention_mask.unsqueeze(-1).expand(token_embeddings.size()).float()
         return torch.sum(token_embeddings * input_mask_expanded, 1) / torch.clamp(input_mask_expanded.sum(1), min=1e-9)
 
-
+    # TODO: von Huggingface übernommen!
     def create_embeddings(self, sentences):
         # Tokenize sentences
         encoded_input = self.tokenizer(sentences, padding=True, truncation=True, return_tensors='pt')
@@ -32,6 +33,25 @@ class SentenceSimilarity():
     
     def compute_similarity(self, first_embed, second_embed):
         return F.cosine_similarity(first_embed, second_embed, dim =-1)
+    
+    def create_sentence_recap(summs, sim, treshold):
+        for instance in summs:
+            sim_recaps = []
+            next_summ = instance["next summary"]
+            next_embed = sim.create_embeddings([next_summ])
+
+            for prev_summ in instance["previous summary"][:3]:
+                sim_recap = ""
+                for prev_sent in sent_tokenize(prev_summ):
+                    prev_embed = sim.create_embeddings([prev_sent])
+
+                    cos_sim = sim.compute_similarity(next_embed, prev_embed)
+                    if cos_sim >= treshold:
+                        sim_recap += prev_sent
+                        sim_recap += ". "
+
+                sim_recaps.append(sim_recap)
+            instance["similarity recap"] = sim_recaps
 
 if __name__ == "__main__":
 

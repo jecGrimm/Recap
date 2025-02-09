@@ -34,9 +34,9 @@ with open("./small_llm.json", 'r') as file:
 # 2551 max, 745 min
 # 100: 10 sec
 # 1000: 11 min
-# len_idx = 500
-# gts = {idx: [summ[0][:len_idx]] for idx, summ in gts.items()}
-# res = {idx: [summ[0][:len_idx]] for idx, summ in res.items()}
+len_idx = 500
+gts = {idx: [summ[0][:len_idx]] for idx, summ in gts.items()}
+res = {idx: [summ[0][:len_idx]] for idx, summ in res.items()}
 
 # split data
 # num_splits = 10

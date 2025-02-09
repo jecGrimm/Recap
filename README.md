@@ -1,33 +1,34 @@
 # TODOS
 ## Allgemein
-small experiment -> data processing -> development of hypers -> test -> visualizations -> writing
+small experiment -> data processing -> development of hypers -> test -> visualizations -> code cleaning -> writing
 
-- small experiment
-- test if I can put multiple refs in the list for evaluation
+### Nötig
+1. small experiment
+-> pipeline: store evaluation in file
+-> store recaps in files correctly
+-> fix BERT score
+2. data processing
+-> store base summs in file
+-> check quality of dev and test
+-> pipeline: all sources
+3. development
+-> number of NERs
+-> treshold sentence sim
+4. evaluation
+-> auf test daten laufen lassen
+5. analysis
+6. code cleaning
 - environment file
-- data
-- baseline
-- sentence similarity
-    - treshold entwickeln
-- analysis or summary better?
-- visualizations
-- new dataset
-- model
+- documentation methoden
+- documentation readme
+7. writing
+
+### Extras
+- analysis or summary better
 - evaluation
-    - semantic based metric (SummaC zum laufen kriegen) -> summac für Gemma auch für das previous chapter anwenden?  
     - meteor zum laufen kriegen
     - statistische Signifikanz
-    - SummaC to check for Gemma spoilers
-- good sentence splitting (nltk.tokenize)
-- develop hyperparameters: similarity treshold, #NERs
-- experiment on test dataset
-
-## Referat
-- factuality metric (summac zum laufen kriegen & huggingface issue klären)
-- NER paper lesen
-- Sentence Modell paper lesen
-- statistische Signifikanz
-- BLEU zwischen 0 und 1?
+    - faktuality metric: summqa?
 
 # Notes
 ## Usage:
@@ -55,8 +56,8 @@ environment:
 - treating the next chapter summary as input is not really correct, we should take the whole chapter, but the input is too small -> split approach?
 - using the next chapter summary as gold reference is not correct because it is no recap
 - LLM für Zusammenfassung:
--> Ist die Information korrekt?
-- Similarity model: maximum input length of 128
+-> Ist die Information korrekt? SummaC ist zwar eine factuality metric, aber die braucht zu lang mit dem Input (nicht mal ein Satz braucht 1min)
+- limited input length (similarity 128) -> ends are cut off
 - BookSum problems: 
 -> data contamenation (but Gemma is filtered for evaluation datasets)
 -> monolingual: English (Gemma also is mostly trained on english data)

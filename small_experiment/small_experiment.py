@@ -12,7 +12,7 @@ import numpy as np
 from collections import defaultdict
 from transformers import AutoModelForSeq2SeqLM, AutoTokenizer, pipeline
 from summac.model_summac import  SummaCConv
-from nltk.tokenize import word_tokenize
+from nltk.tokenize import word_tokenize, sent_tokenize
 
 # TODO: Daten speichern
 # TODO: in Funktionen auslagern
@@ -53,7 +53,7 @@ def create_ner_recap(dataset):
         for prev_summ in instance["previous summary"][:3]:
             ner_recap = ""
             print("prev summ:", prev_summ)
-            for prev_sent in prev_summ.split("."):
+            for prev_sent in sent_tokenize(prev_summ):
                 print("prev sent:", prev_sent)
                 prev_ners = ner_model.nlp(prev_sent)
 
@@ -83,7 +83,7 @@ def create_sentence_recap(dataset, sim, treshold):
         for prev_summ in instance["previous summary"][:3]:
             sim_recap = ""
             #print("prev summ:", prev_summ)
-            for prev_sent in prev_summ.split("."):
+            for prev_sent in sent_tokenize(prev_summ):
                 print("prev sent:", prev_sent)
                 prev_embed = sim.create_embeddings([prev_sent])
 
