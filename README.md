@@ -4,12 +4,10 @@ small experiment -> data processing -> development of hypers -> test -> visualiz
 
 ### Nötig
 1. small experiment
--> store recaps in files correctly
--> fix BERT score
 2. data processing
 -> store base summs in file
--> check quality of dev and test
--> pipeline: all sources
+-> store gold recaps in file
+-> check quality of dev and test data
 3. development
 -> number of NERs
 -> treshold sentence sim

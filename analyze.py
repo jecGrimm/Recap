@@ -44,7 +44,7 @@ def num_kept_sents(dataset, recaps, src_names):
     return kept_norm
 
 
-def vis_pos(positions):
+def vis_pos(positions, filename):
     names = ['begin', 'middle', 'end']
     
     x = np.arange(len(names))  # the label locations
@@ -65,9 +65,10 @@ def vis_pos(positions):
     ax.legend(loc='upper left', ncols=2)
     ax.set_ylim(0, 12)
 
-    plt.show()
+    #plt.show()
+    plt.savefig(filename)
 
-def vis_num_kept(kept_sources, names):    
+def vis_num_kept(kept_sources, names, filename):    
     x = np.arange(len(names))  # the label locations
     width = 0.25  # the width of the bars
     multiplier = 0
@@ -88,4 +89,5 @@ def vis_num_kept(kept_sources, names):
     y_value=['{:.0%}'.format(x) for x in ax.get_yticks()]
     ax.set_yticklabels(y_value)
 
-    plt.show()
+    #plt.show()
+    plt.savefig(filename)
