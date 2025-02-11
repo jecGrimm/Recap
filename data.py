@@ -125,6 +125,20 @@ class RecapData():
             data = [json.loads(line) for line in f]
             #print(Dataset.from_list(data))
         return Dataset.from_list(data)
+    
+    def create_gold_data(self, split, filename):
+        gold_summs = {bid: [summ] for bid, summ in zip(self.mapped_summs[split]["bid"], self.mapped_summs[split]["next summary"])}
+        
+        with open(filename, 'w', encoding="utf-8") as f:
+            json.dump(gold_summs, f, indent=4)
+
+    def create_base_data(self, split, filename):
+        base_summs = {bid: summs for bid, summs in zip(self.mapped_summs[split]["bid"], self.mapped_summs[split]["previous summary"])}
+        
+        with open(filename, 'w', encoding="utf-8") as f:
+            json.dump(base_summs, f, indent=4)
+        
+
 
 
 if __name__ == "__main__":
@@ -133,6 +147,8 @@ if __name__ == "__main__":
     ### train, validation, test
     ## vorletzte chapter summary -> same book id und source
     ## letzte chapter summary -> same book id und source
-    test_recaps = RecapData("./data/small_validation.jsonl")
-    print(test_recaps.mapped_summs)
+    small_recaps = RecapData("./data/small_validation.jsonl")
+    
+    #small_recaps.create_gold_data("validation", "./recaps/small/small_gold.json")
+    small_recaps.create_base_data("validation", "./recaps/small/small_base.json")
     print("Done")

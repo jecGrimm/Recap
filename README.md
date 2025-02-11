@@ -5,9 +5,8 @@ small experiment -> data processing -> development of hypers -> test -> visualiz
 ### Nötig
 1. small experiment
 2. data processing
--> store base summs in file
--> store gold recaps in file
 -> check quality of dev and test data
+-> pipeline: include all sources
 3. development
 -> number of NERs
 -> treshold sentence sim
