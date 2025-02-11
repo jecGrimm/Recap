@@ -12,19 +12,20 @@ from tqdm import tqdm
 # TODO: remove unneccessary imports
 # TODO: read in data files for each split
 class RecapData():
-    def __init__(self, filename = None):
+    def __init__(self, filename = None, split = "validation"):
         '''
         This method initializes the class RecapData(). 
         '''
         self.mapped_summs = defaultdict(list)
 
         if filename:
-            self.mapped_summs["validation"] = self.read_data(filename)
+            self.mapped_summs[split] = self.read_data(filename)
         else:
             self.create_data()
 
     def create_data(self):
         self.kmfoda_data = load_dataset("kmfoda/booksum")
+
         #print("text: ", kmfoda_data["train"][0]["summary_text"])
         
         for split in self.kmfoda_data.keys():
@@ -123,7 +124,7 @@ class RecapData():
         with open(filename, "r", encoding = "utf-8") as f:
             data = [json.loads(line) for line in f]
             #print(Dataset.from_list(data))
-        return data
+        return Dataset.from_list(data)
 
 
 if __name__ == "__main__":

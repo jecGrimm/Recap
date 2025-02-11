@@ -1,6 +1,8 @@
 from transformers import AutoTokenizer, AutoModelForTokenClassification
 from transformers import pipeline
 from nltk.tokenize import sent_tokenize
+import json
+from data import RecapData
 
 class NER():
     def __init__(self):
@@ -33,23 +35,17 @@ class NER():
         '''
         @param dataset: split of mapped_summs data
         '''
-        ner_column = [""] * len(dataset)
-        recaps = dataset.add_column("ner recap", ner_column)
+        recaps = dict()
 
-        for instance in recaps:
+        for instance in dataset:
             ner_recaps = []
             next_summ = instance["next summary"]
             next_ners = self.nlp(next_summ)
             next_words = self.get_words(next_ners)
 
-            #print("next ner:", next_ners)
-            print("next words:", next_words)
-
             for prev_summ in instance["previous summary"][:3]:
                 ner_recap = ""
-                print("prev summ:", prev_summ)
                 for prev_sent in sent_tokenize(prev_summ):
-                    print("prev sent:", prev_sent)
                     prev_ners = self.nlp(prev_sent)
 
                     if prev_ners != []:
@@ -57,9 +53,15 @@ class NER():
 
                         if len(next_words.intersection(prev_words)) != 0:
                             ner_recap += prev_sent
-                            ner_recap += ". "
-                ner_recaps.append(ner_recap)
-            instance["ner recap"] = ner_recaps
+                            ner_recap += " "
+                ner_recaps.append(ner_recap.strip())
+            
+            recaps[instance["bid"]] = ner_recaps
+        return recaps
+
+    def store_recaps(self, filename, recaps):
+        with open(filename, 'w', encoding="utf-8") as f:
+            json.dump(recaps, f, indent=4)
 
 if __name__ == "__main__":
     ner = NER()
@@ -67,3 +69,9 @@ if __name__ == "__main__":
 
     ner_results = ner.nlp(example)
     print(ner_results)
+
+    summs = RecapData("./data/small_validation.jsonl", split = "validation")
+    dataset = summs.mapped_summs["validation"]
+
+    recaps = ner.create_ner_recap(dataset)
+    ner.store_recaps("./recaps/small_ner.json", recaps)

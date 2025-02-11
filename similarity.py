@@ -4,6 +4,8 @@ from transformers import AutoTokenizer, AutoModel
 import torch
 import torch.nn.functional as F
 from nltk.tokenize import sent_tokenize
+import json
+from data import RecapData
 
 class SentenceSimilarity():
     def __init__(self):
@@ -34,44 +36,42 @@ class SentenceSimilarity():
     def compute_similarity(self, first_embed, second_embed):
         return F.cosine_similarity(first_embed, second_embed, dim =-1)
     
-    def create_sentence_recap(summs, sim, treshold):
-        for instance in summs:
+    def create_sentence_recap(self, dataset, treshold):
+        recaps = dict()
+        for instance in dataset:
             sim_recaps = []
             next_summ = instance["next summary"]
-            next_embed = sim.create_embeddings([next_summ])
+            next_embed = self.create_embeddings([next_summ])
 
             for prev_summ in instance["previous summary"][:3]:
                 sim_recap = ""
                 for prev_sent in sent_tokenize(prev_summ):
-                    prev_embed = sim.create_embeddings([prev_sent])
+                    prev_embed = self.create_embeddings([prev_sent])
 
-                    cos_sim = sim.compute_similarity(next_embed, prev_embed)
+                    cos_sim = self.compute_similarity(next_embed, prev_embed)
                     if cos_sim >= treshold:
                         sim_recap += prev_sent
-                        sim_recap += ". "
+                        sim_recap += " "
 
-                sim_recaps.append(sim_recap)
-            instance["similarity recap"] = sim_recaps
+                sim_recaps.append(sim_recap.strip())
+            print("sim recaps:", sim_recaps)
+            recaps[instance["bid"]] = sim_recaps
+        return recaps
+
+    def store_recaps(self, filename, recaps):
+        with open(filename, 'w', encoding="utf-8") as f:
+            json.dump(recaps, f, indent=4)
 
 if __name__ == "__main__":
 
     # Sentences we want sentence embeddings for
     sentences = ['This is an example sentence', 'Each sentence is converted. Das ist ein Paragraph, der aus mehreren Texten besteht']
 
-    similarity = SentenceSimilarity()
-    # Load model from HuggingFace Hub
-    #tokenizer = AutoTokenizer.from_pretrained('sentence-transformers/paraphrase-distilroberta-base-v1')
-    #model = AutoModel.from_pretrained('sentence-transformers/paraphrase-distilroberta-base-v1')
+    sim = SentenceSimilarity()
+    
+    summs = RecapData("./data/small_validation.jsonl", split = "validation")
+    dataset = summs.mapped_summs["validation"]
 
-    one_sentence = "This is a test"
-    two_sentence = "This is a second test"
-    one = similarity.create_embeddings(one_sentence)
-    two = similarity.create_embeddings(two_sentence)
-    print(similarity.compute_similarity(one, two))
+    recaps = sim.create_sentence_recap(dataset, 0.2)
+    sim.store_recaps("./recaps/small_sim.json", recaps)
 
-    # sentence_embeddings = similarity.create_embeddings(sentences)
-
-    # print("Sentence embeddings:")
-    # print(sentence_embeddings)
-    # print("Size:", sentence_embeddings.size())
-    # print(similarity.compute_similarity(sentence_embeddings))

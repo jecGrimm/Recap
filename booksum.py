@@ -7,7 +7,7 @@ Original file is located at
     https://colab.research.google.com/drive/1pw4WUWH9xlCRokvwzCiYGUwdpd13FXvS
 """
 
-!pip install datasets
+#!pip install datasets
 
 # Commented out IPython magic to ensure Python compatibility.
 from datasets import load_dataset

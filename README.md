@@ -4,7 +4,6 @@ small experiment -> data processing -> development of hypers -> test -> visualiz
 
 ### Nötig
 1. small experiment
--> pipeline: store evaluation in file
 -> store recaps in files correctly
 -> fix BERT score
 2. data processing

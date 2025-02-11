@@ -7,16 +7,18 @@ from analyze import kept_positions, vis_num_kept, vis_pos, num_kept_sents
 import os
 
 
-test_recaps = RecapData("./data/summ_test.jsonl")
+test_recaps = RecapData("./data/summ_test.jsonl", split = "test")
 dataset = test_recaps.mapped_summs["test"]
 
 if not os.path.isfile("./recaps/test_ner.json"):
-    sim = SentenceSimilarity()
-    sim.create_sentence_recap(dataset, sim, 0.2)
+    ner = NER()
+    recaps = ner.create_ner_recap(dataset)
+    ner.store_recaps("./recaps/test_ner.json", recaps)
 
 if not os.path.isfile("./recaps/test_sim.json"):
-    ner = NER()
-    ner.create_ner_recap(dataset)
+    sim = SentenceSimilarity()
+    recaps = sim.create_sentence_recap(dataset, 0.2)
+    ner.store_recaps("./recaps/test_sim.json", recaps)
 
 #Evaluation 
 gold_file = "./recaps/test_gold.json"
