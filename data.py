@@ -4,13 +4,6 @@ import re
 from collections import defaultdict
 from tqdm import tqdm
 
-# TODO: handle multiple chap-summs in the last chapter -> is aggregate
-# TODO: handle act 3, scene 4 -> only use act as chap_num
-# TODO: handle chapter number exceptions
-# TODO: remove data without summary_id
-# TODO: Doku
-# TODO: remove unneccessary imports
-# TODO: read in data files for each split
 class RecapData():
     def __init__(self, filename = None, split = "validation"):
         '''
@@ -51,7 +44,6 @@ class RecapData():
         self.last_chapters = self.data_w_chap_num.filter(lambda batch: [chap_num == self.last_chap_nums[batch["bid"][pos]] for pos, chap_num in enumerate(batch["chap_num"])], batched=True)
         
         # map the last chapters to the second to last chapter
-        # TODO: Klappt das so? Oder muss ich das anders speichern?
         last_prev_chapters = Dataset.from_generator(self.concatenate_instances)
         return last_prev_chapters
     
@@ -74,6 +66,8 @@ class RecapData():
             chap_num = re.search(r"\d+$", summ_id) 
             roman = re.search(r"[ivxlcdm]+$", summ_id)
             
+            start_chap_num = None
+            start_roman = None
             if batch["is_aggregate"][pos]:
                 start_chap_num = re.search(r"(\d+)-", summ_id) 
                 start_roman = re.search(r"([ivxlcdm]+)-", summ_id)
@@ -83,14 +77,31 @@ class RecapData():
             elif roman:
                 # transform to integer
                 nums.append(self.tranform_roman_to_int(roman.group()))
-            else:           
-                nums.append(None)   
-                print("no chapter number: ", summ_id)
+            else:
+                middle_chap = None
+                middle_roman = None
+                group = 0
+                if batch["is_aggregate"][pos]:
+                    middle_chap = re.search(r"-(\d+)", summ_id) 
+                    middle_roman = re.search(r"-([ivxlcdm]+)", summ_id)
+                    group = 1
+                else:
+                    middle_chap = re.search(r"\d+", summ_id)
+                    middle_roman = re.search(r" [ivxlcdm]+ ", summ_id)
+
+
+                if middle_chap:           
+                    nums.append(int(middle_chap.group(group)))  
+                elif middle_roman:
+                    nums.append(self.tranform_roman_to_int(middle_roman.group(group).strip()))
+                else:
+                    nums.append(None) 
+                    print("no chapter number: ", summ_id)
             
             if start_chap_num:
-                start_nums.append(int(start_chap_num.groups(1)))
+                start_nums.append(int(start_chap_num.group(1)))
             elif start_roman:
-                start_nums.append(self.tranform_roman_to_int(start_roman.groups(1)))
+                start_nums.append(self.tranform_roman_to_int(start_roman.group(1)))
             else:
                 start_nums.append(nums[pos])
 
@@ -127,13 +138,13 @@ class RecapData():
         return Dataset.from_list(data)
     
     def create_gold_data(self, split, filename):
-        gold_summs = {bid: [summ] for bid, summ in zip(self.mapped_summs[split]["bid"], self.mapped_summs[split]["next summary"])}
+        gold_summs = {bid: [summ] for bid, summ in zip(self.mapped_summs[split]["bid"], self.mapped_summs[split]["next_summary"])}
         
         with open(filename, 'w', encoding="utf-8") as f:
             json.dump(gold_summs, f, indent=4)
 
     def create_base_data(self, split, filename):
-        base_summs = {bid: summs for bid, summs in zip(self.mapped_summs[split]["bid"], self.mapped_summs[split]["previous summary"])}
+        base_summs = {bid: summs for bid, summs in zip(self.mapped_summs[split]["bid"], self.mapped_summs[split]["previous_summary"])}
         
         with open(filename, 'w', encoding="utf-8") as f:
             json.dump(base_summs, f, indent=4)
@@ -147,8 +158,8 @@ if __name__ == "__main__":
     ### train, validation, test
     ## vorletzte chapter summary -> same book id und source
     ## letzte chapter summary -> same book id und source
-    small_recaps = RecapData("./data/small_validation.jsonl")
+    small_recaps = RecapData()
     
-    #small_recaps.create_gold_data("validation", "./recaps/small/small_gold.json")
-    small_recaps.create_base_data("validation", "./recaps/small/small_base.json")
+    small_recaps.create_gold_data("validation", "./recaps/validation/validation_gold.json")
+    small_recaps.create_base_data("validation", "./recaps/validation/validation_base.json")
     print("Done")

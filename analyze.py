@@ -26,8 +26,8 @@ def num_kept_sents(dataset, recaps, src_names):
     num_kept = defaultdict(int)
     num_orig = defaultdict(int)
     for inst in dataset:
-        for pos, summ in enumerate(inst["previous summary"][:3]):
-            source = inst["previous source"][pos]
+        for pos, summ in enumerate(inst["previous_summary"][:3]):
+            source = inst["previous_source"][pos]
 
             num_kept[source] += len(sent_tokenize(recaps[counter]))
             num_orig[source] += len(sent_tokenize(summ))

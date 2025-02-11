@@ -5,8 +5,6 @@ small experiment -> data processing -> development of hypers -> test -> visualiz
 ### Nötig
 1. small experiment
 2. data processing
--> check quality of dev and test data
--> pipeline: include all sources
 3. development
 -> number of NERs
 -> treshold sentence sim
@@ -15,8 +13,11 @@ small experiment -> data processing -> development of hypers -> test -> visualiz
 5. analysis
 6. code cleaning
 - environment file
+- remove unneccessary imports
+- remove unneccessary functions
 - documentation methoden
 - documentation readme
+- alles frisch laufen lassen
 7. writing
 
 ### Extras
