@@ -154,8 +154,8 @@ if __name__ == "__main__":
     ### train, validation, test
     ## vorletzte chapter summary -> same book id und source
     ## letzte chapter summary -> same book id und source
-    small_recaps = RecapData()
+    small_recaps = RecapData("./data/small_validation.jsonl", split = "validation")
     
-    small_recaps.create_gold_data("validation", "./recaps/validation/validation_gold.json")
-    small_recaps.create_base_data("validation", "./recaps/validation/validation_base.json")
+    small_recaps.create_gold_data("validation", "./recaps/small/small_gold.json")
+    small_recaps.create_base_data("validation", "./recaps/small/small_base.json")
     print("Done")

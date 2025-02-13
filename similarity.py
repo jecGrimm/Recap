@@ -6,6 +6,7 @@ import torch.nn.functional as F
 from nltk.tokenize import sent_tokenize
 import json
 from data import RecapData
+from collections import defaultdict
 
 class SentenceSimilarity():
     def __init__(self):
@@ -13,6 +14,8 @@ class SentenceSimilarity():
         self.tokenizer = AutoTokenizer.from_pretrained('sentence-transformers/paraphrase-distilroberta-base-v1')
         self.model = AutoModel.from_pretrained('sentence-transformers/paraphrase-distilroberta-base-v1')
 
+        self.recaps = defaultdict(list)
+        self.treshold = 0.2
     #Mean Pooling - Take attention mask into account for correct averaging
     # TODO: von Huggingface übernommen!
     def mean_pooling(self, model_output, attention_mask):
@@ -36,26 +39,24 @@ class SentenceSimilarity():
     def compute_similarity(self, first_embed, second_embed):
         return F.cosine_similarity(first_embed, second_embed, dim =-1)
     
-    def create_sentence_recap(self, dataset, treshold):
-        recaps = dict()
-        for instance in dataset:
+    def create_sentence_recap(self, batch):
+        for pos, prev_summs in enumerate(batch["previous_summary"]):
             sim_recaps = []
-            next_summ = instance["next_summary"]
+            next_summ = batch["next_summary"][pos]
             next_embed = self.create_embeddings([next_summ])
 
-            for prev_summ in instance["previous_summary"]:
+            for prev_summ in prev_summs:
                 sim_recap = ""
                 for prev_sent in sent_tokenize(prev_summ):
                     prev_embed = self.create_embeddings([prev_sent])
 
                     cos_sim = self.compute_similarity(next_embed, prev_embed)
-                    if cos_sim >= treshold:
+                    if cos_sim >= self.treshold:
                         sim_recap += prev_sent
                         sim_recap += " "
 
                 sim_recaps.append(sim_recap.strip())
-            recaps[instance["bid"]] = sim_recaps
-        return recaps
+            self.recaps[batch["recap_id"][pos]] = sim_recaps
 
     def store_recaps(self, filename, recaps):
         with open(filename, 'w', encoding="utf-8") as f:
@@ -71,6 +72,7 @@ if __name__ == "__main__":
     summs = RecapData("./data/small_validation.jsonl", split = "validation")
     dataset = summs.mapped_summs["validation"]
 
-    recaps = sim.create_sentence_recap(dataset, 0.2)
-    sim.store_recaps("./recaps/small_sim.json", recaps)
+    dataset.map(sim.create_sentence_recap, batched = True)
+
+    sim.store_recaps("./recaps/small_sim.json", sim.recaps)
 

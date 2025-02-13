@@ -3,6 +3,7 @@ from transformers import pipeline
 from nltk.tokenize import sent_tokenize
 import json
 from data import RecapData
+from collections import defaultdict
 
 class NER():
     def __init__(self):
@@ -10,6 +11,7 @@ class NER():
         self.model = AutoModelForTokenClassification.from_pretrained("dslim/bert-base-NER")
 
         self.nlp = pipeline("ner", model=self.model, tokenizer=self.tokenizer)
+        self.recaps = defaultdict(list)
 
     def get_words(self, ners):
         '''
@@ -35,13 +37,13 @@ class NER():
         '''
         @param dataset: split of mapped_summs data
         '''
-        for instance in batch:
+        for pos, prev_summs in enumerate(batch["previous_summary"]):
             ner_recaps = []
-            next_summ = instance["next_summary"]
+            next_summ = batch["next_summary"][pos]
             next_ners = self.nlp(next_summ)
             next_words = self.get_words(next_ners)
 
-            for prev_summ in instance["previous_summary"]:
+            for prev_summ in prev_summs:
                 ner_recap = ""
                 for prev_sent in sent_tokenize(prev_summ):
                     prev_ners = self.nlp(prev_sent)
@@ -54,7 +56,7 @@ class NER():
                             ner_recap += " "
                 ner_recaps.append(ner_recap.strip())
             
-            instance["ner_recaps"] = ner_recaps
+            self.recaps[batch["recap_id"][pos]] = ner_recaps
 
     def store_recaps(self, filename, recaps):
         with open(filename, 'w', encoding="utf-8") as f:
@@ -70,9 +72,6 @@ if __name__ == "__main__":
     summs = RecapData("./data/small_validation.jsonl", split = "validation")
     dataset = summs.mapped_summs["validation"]
 
-    new_column = [None] * len(dataset)
-    dataset = dataset.add_column("ner_recaps", new_column)
-
-    dataset = dataset.map(ner.create_ner_recap, batched = True)
-    recaps = {bid: recaps for bid, recaps in zip(dataset["bid"], dataset["ner_recaps"])}
-    ner.store_recaps("./recaps/small_ner.json", recaps)
+    dataset.map(ner.create_ner_recap, batched = True)
+    #recaps = {idx: recaps for idx, recaps in zip(dataset["recap_id"], dataset["ner_recaps"])}
+    ner.store_recaps("./recaps/small_ner.json", ner.recaps)
