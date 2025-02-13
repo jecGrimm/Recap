@@ -34,7 +34,7 @@ print("\nLLM:\n")
 llm_metrics = evaluate(gold_file, './recaps/small/small_llm.json')
 
 # Store metrics in a file
-with open("./evaluation/small_evaluation_metrics.txt", 'w', encoding="utf-8") as eval_file:
+with open("./evaluation/small_metrics.txt", 'w', encoding="utf-8") as eval_file:
     eval_file.write("\nBaseline:\n")
     for metric, score in base_metrics.items():
         eval_file.write(f"{metric}: {score}\n")

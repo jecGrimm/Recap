@@ -25,14 +25,14 @@ def evaluate(gold_file, result_file):
     ref_dict = {}
     hypos = []
     hypo_dict = {}
-    for book_id, recaps in res.items():
+    for recap_id, recaps in res.items():
         i = 0
         for recap in recaps:
             hypos.append(recap)
-            references.append(gts[book_id])
+            references.append(gts[recap_id])
 
-            ref_dict[f"{book_id}_{i}"] = gts[book_id]
-            hypo_dict[f"{book_id}_{i}"] = [recap]
+            ref_dict[f"{recap_id}_{i}"] = gts[recap_id]
+            hypo_dict[f"{recap_id}_{i}"] = [recap]
             i += 1
     bleu_score = corpus_bleu(references, hypos)
     print("bleu = %s" % bleu_score)
@@ -50,14 +50,14 @@ def evaluate(gold_file, result_file):
     return {"BLEU": bleu_score, "ROUGE": rouge_score, "SPICE": spice_score}
 
 if __name__ == "__main__":
-    gold_file = "./small_experiment/small_gld_together.json"
-    result_file = "./small_experiment/small_ner_together.json"
+    gold_file = "./recaps/validation/validation_gold.json"
+    result_file = "./recaps/validation/validation_base.json"
     ner_metrics = evaluate(gold_file, result_file)
 
-    with open("./evaluation_results.txt", 'w', encoding="utf-8") as eval_file:
-        eval_file.write("NER:\n")
-        for metric, score in ner_metrics.items():
-            eval_file.write(f"{metric}: {score}\n")
+    # with open("./evaluation_results.txt", 'w', encoding="utf-8") as eval_file:
+    #     eval_file.write("NER:\n")
+    #     for metric, score in ner_metrics.items():
+    #         eval_file.write(f"{metric}: {score}\n")
 
 
 

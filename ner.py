@@ -31,19 +31,17 @@ class NER():
         words.add(current_word.replace("#", ""))
         return words
     
-    def create_ner_recap(self, dataset):
+    def create_ner_recap(self, batch, treshold = 0):
         '''
         @param dataset: split of mapped_summs data
         '''
-        recaps = dict()
-
-        for instance in dataset:
+        for instance in batch:
             ner_recaps = []
-            next_summ = instance["next summary"]
+            next_summ = instance["next_summary"]
             next_ners = self.nlp(next_summ)
             next_words = self.get_words(next_ners)
 
-            for prev_summ in instance["previous summary"][:3]:
+            for prev_summ in instance["previous_summary"]:
                 ner_recap = ""
                 for prev_sent in sent_tokenize(prev_summ):
                     prev_ners = self.nlp(prev_sent)
@@ -51,13 +49,12 @@ class NER():
                     if prev_ners != []:
                         prev_words = self.get_words(prev_ners)
 
-                        if len(next_words.intersection(prev_words)) != 0:
+                        if len(next_words.intersection(prev_words)) > treshold:
                             ner_recap += prev_sent
                             ner_recap += " "
                 ner_recaps.append(ner_recap.strip())
             
-            recaps[instance["bid"]] = ner_recaps
-        return recaps
+            instance["ner_recaps"] = ner_recaps
 
     def store_recaps(self, filename, recaps):
         with open(filename, 'w', encoding="utf-8") as f:
@@ -65,13 +62,17 @@ class NER():
 
 if __name__ == "__main__":
     ner = NER()
-    example = "My name is Wolfgang and I live in Berlin"
+    # example = "My name is Wolfgang and I live in Berlin"
 
-    ner_results = ner.nlp(example)
-    print(ner_results)
+    # ner_results = ner.nlp(example)
+    # print(ner_results)
 
     summs = RecapData("./data/small_validation.jsonl", split = "validation")
     dataset = summs.mapped_summs["validation"]
 
-    recaps = ner.create_ner_recap(dataset)
+    new_column = [None] * len(dataset)
+    dataset = dataset.add_column("ner_recaps", new_column)
+
+    dataset = dataset.map(ner.create_ner_recap, batched = True)
+    recaps = {bid: recaps for bid, recaps in zip(dataset["bid"], dataset["ner_recaps"])}
     ner.store_recaps("./recaps/small_ner.json", recaps)

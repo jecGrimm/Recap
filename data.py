@@ -18,8 +18,6 @@ class RecapData():
 
     def create_data(self):
         self.kmfoda_data = load_dataset("kmfoda/booksum")
-
-        #print("text: ", kmfoda_data["train"][0]["summary_text"])
         
         for split in self.kmfoda_data.keys():
             if split != "train":
@@ -51,7 +49,7 @@ class RecapData():
     def concatenate_instances(self):
         for instance in self.last_chapters:
             prev_chap = self.data_w_chap_num.filter(lambda batch: [prev_bid == instance["bid"] for prev_bid in batch["bid"]], batched=True).filter(lambda batch: [prev_chap_num == instance["start_chap_num"]-1 for prev_chap_num in batch["chap_num"]], batched=True)
-            yield {"bid": instance["bid"], "previous_summary_id": prev_chap["summary_id"], "previous_summary": prev_chap["summary_text"], "previous_source": prev_chap["source"], "next_summary_id": instance["summary_id"],"next_summary": instance["summary_text"], "next_source": instance["source"]}
+            yield {"recap_id": f"{instance['bid']}_{instance['source']}", "bid": instance["bid"], "previous_summary_id": prev_chap["summary_id"], "previous_summary": prev_chap["summary_text"], "previous_source": prev_chap["source"], "next_summary_id": instance["summary_id"],"next_summary": instance["summary_text"], "next_source": instance["source"]}
 
 
     def get_last_chapter_num(self, batch):
@@ -138,18 +136,16 @@ class RecapData():
         return Dataset.from_list(data)
     
     def create_gold_data(self, split, filename):
-        gold_summs = {bid: [summ] for bid, summ in zip(self.mapped_summs[split]["bid"], self.mapped_summs[split]["next_summary"])}
+        gold_summs = {idx: [summ] for idx, summ in zip(self.mapped_summs[split]["recap_id"], self.mapped_summs[split]["next_summary"])}
         
         with open(filename, 'w', encoding="utf-8") as f:
             json.dump(gold_summs, f, indent=4)
 
     def create_base_data(self, split, filename):
-        base_summs = {bid: summs for bid, summs in zip(self.mapped_summs[split]["bid"], self.mapped_summs[split]["previous_summary"])}
+        base_summs = {idx: summs for idx, summs in zip(self.mapped_summs[split]["recap_id"], self.mapped_summs[split]["previous_summary"])}
         
         with open(filename, 'w', encoding="utf-8") as f:
             json.dump(base_summs, f, indent=4)
-        
-
 
 
 if __name__ == "__main__":

@@ -40,10 +40,10 @@ class SentenceSimilarity():
         recaps = dict()
         for instance in dataset:
             sim_recaps = []
-            next_summ = instance["next summary"]
+            next_summ = instance["next_summary"]
             next_embed = self.create_embeddings([next_summ])
 
-            for prev_summ in instance["previous summary"][:3]:
+            for prev_summ in instance["previous_summary"]:
                 sim_recap = ""
                 for prev_sent in sent_tokenize(prev_summ):
                     prev_embed = self.create_embeddings([prev_sent])
@@ -54,7 +54,6 @@ class SentenceSimilarity():
                         sim_recap += " "
 
                 sim_recaps.append(sim_recap.strip())
-            print("sim recaps:", sim_recaps)
             recaps[instance["bid"]] = sim_recaps
         return recaps
 
