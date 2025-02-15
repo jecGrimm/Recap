@@ -12,6 +12,7 @@ class NER():
 
         self.nlp = pipeline("ner", model=self.model, tokenizer=self.tokenizer)
         self.recaps = defaultdict(list)
+        self.treshold = 0
 
     def get_words(self, ners):
         '''
@@ -33,7 +34,7 @@ class NER():
         words.add(current_word.replace("#", ""))
         return words
     
-    def create_ner_recap(self, batch, treshold = 0):
+    def create_ner_recap(self, batch):
         '''
         @param dataset: split of mapped_summs data
         '''
@@ -51,7 +52,7 @@ class NER():
                     if prev_ners != []:
                         prev_words = self.get_words(prev_ners)
 
-                        if len(next_words.intersection(prev_words)) > treshold:
+                        if len(next_words.intersection(prev_words)) > self.treshold:
                             ner_recap += prev_sent
                             ner_recap += " "
                 ner_recaps.append(ner_recap.strip())
