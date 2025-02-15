@@ -2,6 +2,8 @@ from nltk.tokenize import sent_tokenize
 from collections import defaultdict
 import numpy as np
 import matplotlib.pyplot as plt
+import json
+from data import RecapData
 
 def kept_positions(summs, recaps):
     values = [0, 0, 0]
@@ -22,17 +24,15 @@ def kept_positions(summs, recaps):
     return values
 
 def num_kept_sents(dataset, recaps, src_names):
-    counter = 0
     num_kept = defaultdict(int)
     num_orig = defaultdict(int)
     for inst in dataset:
-        for pos, summ in enumerate(inst["previous_summary"][:3]):
+        for pos, summ in enumerate(inst["previous_summary"]):
             source = inst["previous_source"][pos]
 
-            num_kept[source] += len(sent_tokenize(recaps[counter]))
+            num_kept[source] += len(sent_tokenize(recaps[inst["recap_id"]][pos]))
             num_orig[source] += len(sent_tokenize(summ))
 
-            counter += 1
 
     kept_norm = []
     for src in src_names:
@@ -63,7 +63,7 @@ def vis_pos(positions, filename):
     ax.set_title('Position of the recap sentences in the original summary')
     ax.set_xticks(x + width/2, names)
     ax.legend(loc='upper left', ncols=2)
-    ax.set_ylim(0, 12)
+    ax.set_ylim(0, max([pos for pos_list in positions.values() for pos in pos_list])+5)
 
     #plt.show()
     plt.savefig(filename)
@@ -91,3 +91,26 @@ def vis_num_kept(kept_sources, names, filename):
 
     #plt.show()
     plt.savefig(filename)
+
+if __name__ == "__main__":
+    test_recaps = RecapData("./data/small_validation.jsonl", split = "validation")
+    dataset = test_recaps.mapped_summs["validation"]
+
+    with open('./recaps/small/small_base.json', 'r') as file:
+        base_res = json.load(file)
+    with open('./recaps/small/small_ner.json', 'r') as file:
+            ner_res = json.load(file)
+    with open('./recaps/small/small_sim.json', 'r') as file:
+            sim_res = json.load(file)
+
+    ner_recaps = [recap for recaps in ner_res.values() for recap in recaps]
+    sim_recaps = [recap for recaps in sim_res.values() for recap in recaps]
+    base_recaps = [summ for summs in base_res.values() for summ in summs]
+    # Positions of kept sentences
+    # positions = {"NER": kept_positions(base_recaps, ner_recaps), "Similarity": kept_positions(base_recaps, sim_recaps)} 
+    # vis_pos(positions, "./visualizations/small/small_pos.png")
+
+    # Proportion of kept sentences
+    src_names = list({idx.split("_")[1] for idx in base_res.keys()})
+    kept_sources = {"NER": num_kept_sents(dataset, ner_res, src_names), "Similarity": num_kept_sents(dataset, sim_res, src_names)}
+    vis_num_kept(kept_sources, src_names, "./visualizations/small/small_kept.png")
