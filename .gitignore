@@ -1,8 +1,4 @@
 archive/*
-__pycache__/ner.cpython-311.pyc
-__pycache__/data.cpython-311.pyc
-__pycache__/similarity.cpython-311.pyc
-__pycache__/analyze.cpython-311.pyc
-__pycache__/evaluate.cpython-311.pyc
+__pycache__/*
 test.txt
 CaptionMetrics/pycocoevalcap/spice/lib/stanford-*
