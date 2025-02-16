@@ -33,15 +33,14 @@ def num_kept_sents(dataset, recaps, src_names):
             num_kept[source] += len(sent_tokenize(recaps[inst["recap_id"]][pos]))
             num_orig[source] += len(sent_tokenize(summ))
 
-
-    kept_norm = []
+    kept_normalized = []
     for src in src_names:
         if num_orig[src] != 0:
-            kept_norm.append(num_kept[src]/num_orig[src])
+            kept_normalized.append(num_kept[src]/num_orig[src])
         else:
-            kept_norm.append(0)
+            kept_normalized.append(0)
 
-    return kept_norm
+    return kept_normalized
 
 
 def vis_pos(positions, filename):
@@ -68,7 +67,7 @@ def vis_pos(positions, filename):
     #plt.show()
     plt.savefig(filename)
 
-def vis_num_kept(kept_sources, names, filename):    
+def vis_num_kept(kept_sources, names, filename): 
     x = np.arange(len(names))  # the label locations
     width = 0.25  # the width of the bars
     multiplier = 0

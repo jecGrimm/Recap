@@ -13,12 +13,12 @@ ner = NER()
 sim = SentenceSimilarity()
 
 if not os.path.isfile("./recaps/small/small_ner.json"):
-    ner.treshold = 0
+    ner.treshold = 0 # best hyperparameter
     dataset.map(ner.create_ner_recap, batched = True)
     ner.store_recaps("./recaps/small/small_ner.json", ner.recaps)
 
 if not os.path.isfile("./recaps/small/small_sim.json"):
-    sim.treshold = 0.1
+    sim.treshold = 0.1 # best hyperparameter
     dataset.map(sim.create_sentence_recap, batched = True)
     sim.store_recaps("./recaps/small/small_sim.json", sim.recaps)
 
@@ -34,7 +34,7 @@ print("\nSentence Similarity:\n")
 sim_metrics = evaluate(gold_file, './recaps/small/small_sim.json')
 
 print("\nLLM:\n")
-llm_metrics = evaluate(gold_file, './recaps/small/small_llm.json')
+llm_metrics = evaluate(gold_file, './recaps/small/small_llm_test.json')
 
 # Store metrics in a file
 with open("./evaluation/small_metrics.txt", 'w', encoding="utf-8") as eval_file:
@@ -73,6 +73,6 @@ positions = {"NER": kept_positions(base_recaps, ner_recaps), "Similarity": kept_
 vis_pos(positions, "./visualizations/small/small_pos.png")
 
 # Proportion of kept sentences
-src_names = {idx.split("_")[1] for idx in base_recaps.keys()}
-kept_sources = {"NER": num_kept_sents(dataset, ner_recaps, src_names), "Similarity": num_kept_sents(dataset, sim_recaps, src_names)}
+src_names = list({idx.split("_")[1] for idx in base_res.keys()})
+kept_sources = {"NER": num_kept_sents(dataset, ner_res, src_names), "Similarity": num_kept_sents(dataset, sim_res, src_names)}
 vis_num_kept(kept_sources, src_names, "./visualizations/small/small_kept.png")
