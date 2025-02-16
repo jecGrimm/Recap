@@ -2,7 +2,6 @@ from datasets import load_dataset, Dataset
 import json
 import re
 from collections import defaultdict
-from tqdm import tqdm
 
 class RecapData():
     def __init__(self, filename = None, split = "validation"):
