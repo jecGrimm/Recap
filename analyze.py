@@ -62,7 +62,7 @@ def vis_pos(positions, filename):
     ax.set_title('Position of the recap sentences in the original summary')
     ax.set_xticks(x + width/2, names)
     ax.legend(loc='upper left', ncols=2)
-    ax.set_ylim(0, max([pos for pos_list in positions.values() for pos in pos_list])+5)
+    ax.set_ylim(0, max([pos for pos_list in positions.values() for pos in pos_list])+50)
 
     #plt.show()
     plt.savefig(filename)
