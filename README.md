@@ -9,8 +9,6 @@ small experiment -> data processing -> development of hypers -> test -> visualiz
 4. evaluation
 5. analysis
 6. code cleaning
--> remove unneccessary functions
--> documentation methoden
 -> documentation readme
 -> alles frisch laufen lassen
 7. writing

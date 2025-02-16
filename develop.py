@@ -7,6 +7,7 @@ from tqdm import tqdm
 from CaptionMetrics.pycocoevalcap.rouge.rouge import Rouge
 from CaptionMetrics.pycocoevalcap.spice.spice import Spice
 
+# load data and models
 val_recaps = RecapData("./data/summ_validation.jsonl", split = "validation")
 dataset = val_recaps.mapped_summs["validation"]
 tresholds = [0, 1, 2]
@@ -25,6 +26,7 @@ for treshold in tqdm(tresholds, desc = "Evaluating tresholds"):
     ner_path = f"./recaps/validation/validation_ner_{ner_treshold}.json"
     sim_path = f"./recaps/validation/validation_sim_{sim_treshold}.json"
 
+    # only create recaps if they do not exist yet
     if not os.path.isfile(ner_path):
         ner.treshold = ner_treshold
         dataset.map(ner.create_ner_recap, batched = True)

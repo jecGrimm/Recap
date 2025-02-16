@@ -6,6 +6,14 @@ import json
 from data import RecapData
 
 def kept_positions(summs, recaps):
+    '''
+    This function counts the number of kept sentences in the beginning, middle and end of the summary.
+
+    @params
+        summs: original chapter summaries
+        recaps: generated recaps
+    @returns values: list with the positional counts of the kept sentences
+    '''
     values = [0, 0, 0]
     for summ_pos, summ in enumerate(summs):
         sentences = sent_tokenize(summ)
@@ -24,6 +32,15 @@ def kept_positions(summs, recaps):
     return values
 
 def num_kept_sents(dataset, recaps, src_names):
+    '''
+    This function counts the number of sentences kept per source.
+
+    @params
+        dataset: mapped chapter summaries
+        recaps: generated recaps
+        src_names: names of the summary sources
+    @returns kept_normalized: list of the proportion of kept sentences per source
+    '''
     num_kept = defaultdict(int)
     num_orig = defaultdict(int)
     for inst in dataset:
@@ -44,6 +61,13 @@ def num_kept_sents(dataset, recaps, src_names):
 
 
 def vis_pos(positions, filename):
+    '''
+    This function creates a plot of the number of sentences kept in the begin, middle and end of the summaries.
+
+    @params
+        positions: dictionary with the approach and the number of sentences per position
+        filename: output file for the plot 
+    '''
     names = ['begin', 'middle', 'end']
     
     x = np.arange(len(names))  # the label locations
@@ -67,7 +91,15 @@ def vis_pos(positions, filename):
     #plt.show()
     plt.savefig(filename)
 
-def vis_num_kept(kept_sources, names, filename): 
+def vis_num_kept(kept_sources, names, filename):
+    '''
+    This function creates a plot for the proportion of sentences kept per source.
+
+    @params
+        kept_sources: dictionary with the number of kept sentences per source for each approach
+        names: list of the source names
+        filename: output file
+    ''' 
     x = np.arange(len(names))  # the label locations
     width = 0.25  # the width of the bars
     multiplier = 0
@@ -77,7 +109,6 @@ def vis_num_kept(kept_sources, names, filename):
     for approach, prop_kept in kept_sources.items():
         offset = width * multiplier
         rects = ax.bar(x + offset, prop_kept, width, label=approach)
-        #ax.bar_label(rects, padding=3)
         multiplier += 1
             
     ax.set_ylabel('Proportion of the extracted sentences')
@@ -92,24 +123,28 @@ def vis_num_kept(kept_sources, names, filename):
     plt.savefig(filename)
 
 if __name__ == "__main__":
-    test_recaps = RecapData("./data/small_validation.jsonl", split = "validation")
-    dataset = test_recaps.mapped_summs["validation"]
+    # example
+    # load data
+    example_recaps = RecapData("./data/example.jsonl", split = "validation")
+    dataset = example_recaps.mapped_summs["validation"]
 
-    with open('./recaps/small/small_base.json', 'r') as file:
+    # load recaps
+    with open('./recaps/example/example_base.json', 'r') as file:
         base_res = json.load(file)
-    with open('./recaps/small/small_ner.json', 'r') as file:
+    with open('./recaps/example/example_ner.json', 'r') as file:
             ner_res = json.load(file)
-    with open('./recaps/small/small_sim.json', 'r') as file:
+    with open('./recaps/example/example_sim.json', 'r') as file:
             sim_res = json.load(file)
 
     ner_recaps = [recap for recaps in ner_res.values() for recap in recaps]
     sim_recaps = [recap for recaps in sim_res.values() for recap in recaps]
     base_recaps = [summ for summs in base_res.values() for summ in summs]
+
     # Positions of kept sentences
-    # positions = {"NER": kept_positions(base_recaps, ner_recaps), "Similarity": kept_positions(base_recaps, sim_recaps)} 
-    # vis_pos(positions, "./visualizations/small/small_pos.png")
+    positions = {"NER": kept_positions(base_recaps, ner_recaps), "Similarity": kept_positions(base_recaps, sim_recaps)} 
+    vis_pos(positions, "./visualizations/example_pos.png")
 
     # Proportion of kept sentences
     src_names = list({idx.split("_")[1] for idx in base_res.keys()})
     kept_sources = {"NER": num_kept_sents(dataset, ner_res, src_names), "Similarity": num_kept_sents(dataset, sim_res, src_names)}
-    vis_num_kept(kept_sources, src_names, "./visualizations/small/small_kept.png")
+    vis_num_kept(kept_sources, src_names, "./visualizations/example_kept.png")
