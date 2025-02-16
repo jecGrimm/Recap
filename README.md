@@ -1,72 +1,72 @@
-# TODOS
-## Allgemein
-small experiment -> data processing -> development of hypers -> test -> visualizations -> code cleaning -> writing
+This repository performs provides an experiment for the generation of recaps from the BOOKSUM (Krysćiński et al. 2022) dataset. 
 
-### Nötig
-1. small experiment
-2. data processing
-3. development
-4. evaluation
-5. analysis
-6. code cleaning
--> documentation readme
--> alles frisch laufen lassen
-7. writing
+# Installation
+Please clone the repository with the command `git clone --recurse-submodules git@github.com:jecGrimm/Recap.git`.
 
-### Extras
-- analysis or summary better
-- evaluation
-    - meteor zum laufen kriegen
-    - statistische Signifikanz
-    - faktuality metric: summqa?
+If the repository has been cloned via `git clone git@github.com:jecGrimm/Recap.git`, please run `git submodule update --init --recursive` to install the needed submodules.
 
-# Notes
-## Usage:
-installation:
-- git clone --recurse-submodules <insert-url>
-or after normal clone: 
-- git submodule update --init --recursive
+We provide a conda environment which can be installed with the command `conda env create -f environment.yml`.
 
-environment: 
-- recap: python 3.13, Problem: pytorch kann nicht installiert werden
-- recap3.7: Problem: urllib3 kann von Huggingface nicht ausgeführt werden
-- recap3.11: benötigte Versionen aus DL file  -> geht mit NER
+To run the compute the SPICE metric please download [Stanford CoreNLP 3.6.0](http://nlp.stanford.edu/software/stanford-corenlp-full-2015-12-09.zip) and add the files `stanford-corenlp-3.6.0.jar` and `stanford-corenlp-3.6.0-models.jar` to the directory `CaptionMetrics/pycocoevalcap/spice/lib/`.
 
-SPICE:
-Stanford CoreNLP 3.6.0(download)
-add stanford-corenlp-3.6.0.jar to pycocoevalcap/spice/lib/
-add stanford-corenlp-3.6.0-models.jar to pycocoevalcap/spice/lib/
+# Experiment Setup
+We test compare an [NER model](https://huggingface.co/dslim/bert-base-NER), [SBERT](https://huggingface.co/sentence-transformers/paraphrase-distilroberta-base-v1), and [Gemma-2-2b-it](https://huggingface.co/google/gemma-2-2b-it) for the generation of recaps from BOOKSUM (Krysćiński et al. 2022). A recap is a summary of previous content which is important for coming content.
 
-## Problems:
-- Extract and align sequential chapter numbers 
--> is a string with various format (e.g. "act 3, scene 4" vs. "chapter 1-2")
--> summarization of multiple chapters at once ("chapter 1-2")
-- The models do not produce the same results -> each created dataset might be different
-- summaries are quite long -> similarities get very small
-- Extractive approach
--> not very good readable (Sprünge, fehlende Zusammenhänge)
--> only the information is kept (keine schönen Bindeglieder und Einordnungen)
-- when only using the previous chapter, there is some information missing (e.g. first and last names of the characters)
-- only whole sentences are extracted, but only one part of them might be interesting
-- treating the next chapter summary as input is not really correct, we should take the whole chapter, but the input is too small -> split approach?
-- using the next chapter summary as gold reference is not correct because it is no recap
-- LLM für Zusammenfassung:
--> Ist die Information korrekt? SummaC ist zwar eine factuality metric, aber die braucht zu lang mit dem Input (nicht mal ein Satz braucht 1min)
-- limited input length (similarity 128) -> ends are cut off
-- BookSum problems: 
--> data contamenation (but Gemma is filtered for evaluation datasets)
--> monolingual: English (Gemma also is mostly trained on english data)
--> quality of the summaries
--> harmful content in old books
-- NER: Model is trained on news domain (CoNLL-2003)
+For the NER model and SBERT, we map the last chapter summaries to the second-to-last chapter summaries. For NER, we extract the sentences from the second-to-last chapter summary that contain at least one Named Entitiy in the last chapter summary. For SBERT, we extract the sentences with cosine similarity > 0.1 with the last chapter summary. Gemma-2-2b-it is prompted to generate recaps for the booktitles in BOOKSUM (Krysćiński et al. 2022). 
 
-## Experiment Setup
-### Models
-- Extractive
--> NER
--> DistilBERT
-- Abstractive
--> Gemma-2-2b-it
+We evaluate the generated recaps with BLEU-1, ROUGE-L, and SPICE. For further analysis, we create figures that show the positions and the sources of the kept sentences. 
 
-### Evaluation
-- No Bertscore because it depends on BERT embeddings and measures the similarity -> Not feasible to compare with the sentence similarity DistilBERT model 
+# Structure
+## CaptionMetrics
+This directory contains a modified version of the repository [wangleihitcs/CaptionMetrics](https://github.com/wangleihitcs/CaptionMetrics). It is used to compute the ROUGE-L and SPICE scores.
+
+## data
+This directory contains the dataset files with the original summaries of BOOKSUM (Krysćiński et al. 2022). Each instance maps one last chapter summary to its second-to-last chapter summaries. Keys:<br>
+recap_id: ID of the instance, the format is {<book_id>_<next_source>} <br>
+bid: ID of the book <br>
+previous_summary_id: list of the second-to-last chapter summary ids <br>
+previous_summary: list of the second-to-last chapter summaries <br>
+previous_source: list of the second-to-last chapter summary sources <br>
+next_summary_id: last chapter summary id <br>
+next_summary: last chapter summary <br>
+next_source: source of the last chapter summary
+
+## evaluation
+This directory contains files with the evaluation metrics from the performed experiments.
+
+## notebooks
+This directory contains the notebook for the LLM recap generation. Gemma-2b-2-it needs a GPU to run.
+
+## recaps
+This directory contains the recaps generated by the examined approaches.
+
+## visualizations
+This directory contains the figures for the analysis of the kept sentences.
+
+## scripts
+### analyze.py
+This script provides functions for the creation of the figures for the analysis.
+
+### data.py
+This script contains the class RecapData which maps the chapter summaries from BOOKSUM (Krysćiński et al. 2022) and creates the baseline and gold recaps. The last chapter summaries serve as gold references, the second-to-last summaries as baseline.
+
+### develop.py
+This script develops the tresholds for the NER model and for SBERT on the validation split.
+
+### evaluate.py
+This script provides functions to perform the evaluation of the generated recaps. We compute  BLEU-1, ROUGE-L, SPICE scores. 
+
+### experiment.py
+This script generates recaps for all examined approaches on the test split and evaluates them.
+
+### llm.py
+This script generates recaps with Gemma-2b-2-it. Please note that a GPU is needed to run the script!
+
+### ner.py
+This script contains the class NER which can generate extractive recaps via NER matching.
+
+### similarity.py
+This script contains the class SentenceSimilarity which can generate extractive recaps via cosine similarity.
+
+# References
+Krysćiński, Wojciech, Nazneen Rajani, Divyansh Agarwal, Caiming Xiong, and Dragomir Radev. 2022. “BOOKSUM: A Collection of Datasets for Long-Form Narrative Summarization.” In Findings of the Association for Computational Linguistics: EMNLP 2022, edited by Yoav Goldberg, Zornitsa Kozareva, and Yue Zhang, 6536–58. Abu Dhabi, United Arab Emirates: Association for Computational Linguistics. https://doi.org/10.18653/v1/2022.findings-emnlp.488.
