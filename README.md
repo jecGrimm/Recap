@@ -6,18 +6,15 @@ small experiment -> data processing -> development of hypers -> test -> visualiz
 1. small experiment
 2. data processing
 3. development
--> number of NERs
--> treshold sentence sim
 4. evaluation
--> auf test daten laufen lassen
 5. analysis
 6. code cleaning
-- environment file
-- remove unneccessary imports
-- remove unneccessary functions
-- documentation methoden
-- documentation readme
-- alles frisch laufen lassen
+-> CaptionMetrics auf git
+-> remove unneccessary imports
+-> remove unneccessary functions
+-> documentation methoden
+-> documentation readme
+-> alles frisch laufen lassen
 7. writing
 
 ### Extras
